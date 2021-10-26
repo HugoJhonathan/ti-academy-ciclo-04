@@ -14,7 +14,7 @@ export const Home = () => {
                         className="btn btn-outline-success btn-sm">Cliente</a>
                     <a href="/listar-pedido"
                         className="btn btn-outline-success btn-sm">Pedido</a>
-                    <a href="/listar-servico"
+                    <a href="/listar-servicos"
                         className="btn btn-outline-success btn-sm">Serviço</a>
                 </div>
 

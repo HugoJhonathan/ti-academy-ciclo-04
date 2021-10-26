@@ -5,20 +5,22 @@ import { Container, Table, Alert } from "reactstrap"
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
-export const ListarServico = () => {
-    //   dados obtidos
+export const Item = (props) => {
+    console.log(props.match.params.id);
     const [data, setData] = useState([]);
+
+    const [id, setId] = useState(props.match.params.id);
 
     const [status, setStatus] = useState({
         type: '',
         message: ''
     });
 
-    const getServicos = async () => {
-        await axios.get(api + '/listaservicos')
+    const getItens = async () => {
+        await axios.get(`${api}/servico/${id}/pedidos`)
             .then((response) => {
-                console.log(response.data.servicos);
-                setData(response.data.servicos);
+                console.log(response.data.prod);
+                setData(response.data.item);
             })
             .catch(() => {
                 setStatus({
@@ -30,8 +32,8 @@ export const ListarServico = () => {
     }
 
     useEffect(() => {
-        getServicos();
-    }, []);
+        getItens();
+    }, [id]);
 
 
 
@@ -48,21 +50,21 @@ export const ListarServico = () => {
                 <Table striped>
                     <thead>
                         <tr>
-                            <th>ID</th>
-                            <th>Nome</th>
-                            <th>Descrição</th>
-                            <th>Ação</th>
+                            <th>Pedido</th>
+                            <th>Quantidade</th>
+                            <th>Valor</th>
+                            <th>Visualizar</th>
                         </tr>
                     </thead>
                     <tbody>
 
                         {data.map(item => (
-                            <tr key={item.id}>
-                                <td>{item.id}</td>
-                                <td>{item.nome}</td>
-                                <td>{item.descricao}</td>
+                            <tr key={item.ServicoID}>
+                                <td>{item.PedidoId}</td>
+                                <td>{item.valor}</td>
+                                <td>{item.quantidade}</td>
                                 <td className="text-center/">
-                                    <Link to={"/listar-pedido/"+item.id}
+                                    <Link to={"/listar-pedido/"}
                                     className="btn btn-outline-primary">
                                     Consultar
                                     </Link>
