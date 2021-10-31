@@ -10,6 +10,11 @@ import {
     Container,
 } from 'reactstrap';
 
+const navbarBackground = {  
+    backgroundColor:"#03989e",
+  };
+
+
 export const Menu = (props) => {
     const [isOpen, setIsOpen] = useState(false);
 
@@ -17,14 +22,20 @@ export const Menu = (props) => {
 
     return (
         <div>
-            <Navbar color="danger" dark expand="md">
+            <Navbar style={navbarBackground} dark expand="md">
                 <Container>
                     <NavbarBrand href="/">TI Acadedmy</NavbarBrand>
                     <NavbarToggler onClick={toggle} />
-                    <Collapse isOpen={isOpen} navbar>
+                    <Collapse isOpen={isOpen} navbar className="d-flex flex-row-reverse">
                         <Nav className="mr-auto" navbar>
                             <NavItem>
-                                <NavLink href="/">Home</NavLink>
+                                <NavLink href="/listar-cliente">Clientes</NavLink>
+                            </NavItem>
+                            <NavItem>
+                                <NavLink href="/listar-pedido">Pedidos</NavLink>
+                            </NavItem>
+                            <NavItem>
+                                <NavLink href="/listar-servicos">Serviços</NavLink>
                             </NavItem>
                         </Nav>
                     </Collapse>

@@ -36,42 +36,56 @@ export const ListarServico = () => {
 
 
     return (
-        <div>
-            <Container>
-                <div>
-                    <h1>Visualizar informações do serviço</h1>
+
+        <Container>
+            <div className="p-2">
+                <div className="d-flex">
+                    <div className="p-2 m-auto">
+                        <h1>Visualizar informações do serviço</h1>
+                    </div>
+
+                    <div style={{ margin: 'auto 0' }}>
+                        <Link to="/cadastrarservico"
+                            className="btn btn-outline-primary btn-sm">
+                            Cadastrar
+                        </Link>
+                    </div>
+
                 </div>
                 {status.type === 'error' ? <Alert color="danger">
                     {status.message}
                 </Alert> : ''}
-                
-                <Table striped>
+            </div>
+            <div className="p-2">
+                <Table hover striped bordered>
                     <thead>
                         <tr>
-                            <th>ID</th>
+                            <th >ID</th>
                             <th>Nome</th>
                             <th>Descrição</th>
-                            <th>Ação</th>
+                            <th className="text-center">Ação</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody style={{ borderTop: 'none' }}>
 
                         {data.map(item => (
                             <tr key={item.id}>
-                                <td>{item.id}</td>
-                                <td>{item.nome}</td>
-                                <td>{item.descricao}</td>
-                                <td className="text-center/">
-                                    <Link to={"/listar-pedido/"+item.id}
-                                    className="btn btn-outline-primary">
-                                    Consultar
+                                <td className="align-middle">{item.id}</td>
+                                <td className="align-middle">{item.nome}</td>
+                                <td className="align-middle">{item.descricao}</td>
+                                <td className="text-center align-middle">
+                                    <Link to={"/listar-pedido/" + item.id}
+                                        className="btn btn-outline-primary">
+                                        Consultar
                                     </Link>
                                 </td>
                             </tr>
                         ))}
                     </tbody>
                 </Table>
-            </Container>
-        </div>
+            </div>
+
+        </Container>
+
     )
 }
