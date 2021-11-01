@@ -7,7 +7,10 @@ import { ListarServico } from './views/Servico/Listar/';
 import { Menu } from './components/menu';
 import { Item } from './views/Servico/Item'
 import { CadastrarServico } from './views/Servico/Cadastrar'
+import { EditarServico } from './views/Servico/Editar'
 import { CadastrarCliente } from './views/Cliente/Cadastrar'
+import {ListaPedido} from './views/Pedido/Listar'
+import "./App.css"
 
 function App() {
   return (
@@ -23,6 +26,8 @@ function App() {
           <Route path="/listar-pedido/:id" component={Item}/>
           <Route path="/cadastrarservico" component={CadastrarServico}/>
           <Route path="/cadastrarcliente" component={CadastrarCliente}/>
+          <Route path="/listapedido/:id" component={ListaPedido}/>
+          <Route path="/atualizaservico/:id" component={EditarServico}/>
        </Switch>
      </Router>
     </div>

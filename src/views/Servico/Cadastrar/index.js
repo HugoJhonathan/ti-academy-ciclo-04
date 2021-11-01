@@ -76,6 +76,7 @@ export const CadastrarServico = () => {
                         name="nome"
                         placeholder="Nome do serviço"
                         type="text"
+                        
                         onChange={valorInput}
                     />
                 </FormGroup>

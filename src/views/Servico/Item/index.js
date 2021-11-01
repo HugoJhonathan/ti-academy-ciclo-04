@@ -19,7 +19,7 @@ export const Item = (props) => {
     const getItens = async () => {
         await axios.get(`${api}/servico/${id}/pedidos`)
             .then((response) => {
-                console.log(response.data.prod);
+                console.log(response.data.item);
                 setData(response.data.item);
             })
             .catch(() => {
@@ -50,7 +50,8 @@ export const Item = (props) => {
                 <Table striped>
                     <thead>
                         <tr>
-                            <th>Pedido</th>
+                            <th>Pedido Id</th>
+                            <th>Servico Id</th>
                             <th>Quantidade</th>
                             <th>Valor</th>
                             <th>Visualizar</th>
@@ -59,10 +60,11 @@ export const Item = (props) => {
                     <tbody>
 
                         {data.map(item => (
-                            <tr key={item.ServicoID}>
+                            <tr key={item.ServicoId}>
                                 <td>{item.PedidoId}</td>
-                                <td>{item.valor}</td>
+                                <td>{item.ServicoId}</td>
                                 <td>{item.quantidade}</td>
+                                <td>{item.valor.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</td>
                                 <td className="text-center/">
                                     <Link to={"/listar-pedido/"}
                                     className="btn btn-outline-primary">

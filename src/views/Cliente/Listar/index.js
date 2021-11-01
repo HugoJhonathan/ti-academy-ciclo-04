@@ -1,9 +1,15 @@
 import axios from "axios";
 import { api } from '../../../config/'
 
-import { Container, Table, Alert } from "reactstrap"
+import { Container, Table, Alert, Button, Badge } from "reactstrap"
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import VisibilityIcon from '@material-ui/icons/Visibility';
+import AddIcon from '@material-ui/icons/Add';
+import EditIcon from '@material-ui/icons/Edit';
+import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
+
+let total_clientes = 0;
 
 export const ListarCliente = () => {
     //   dados obtidos
@@ -17,7 +23,8 @@ export const ListarCliente = () => {
     const getCliente = async () => {
         await axios.get(api + '/listaclientes')
             .then((response) => {
-                console.log(response.data.clientes);
+                total_clientes = response.data.clientes.length;
+                console.log(response.data.clientes.length);
                 setData(response.data.clientes);
             })
             .catch(() => {
@@ -46,8 +53,8 @@ export const ListarCliente = () => {
 
                     <div style={{ margin: 'auto 0' }}>
                         <Link to="/cadastrarcliente"
-                            className="btn btn-outline-primary btn-sm">
-                            Cadastrar
+                            className="btn btn-primary btn d-flex align-items-center">
+                            <AddIcon />Cadastrar Cliente
                         </Link>
                     </div>
 
@@ -57,7 +64,10 @@ export const ListarCliente = () => {
                 </Alert> : ''}
             </div>
             <div className="p-2">
-                <Table hover striped bordered>
+
+
+
+                <Table hover responsive striped bordered>
                     <thead>
                         <tr>
                             <th>ID</th>
@@ -67,10 +77,10 @@ export const ListarCliente = () => {
                             <th>UF</th>
                             <th>Nascimento</th>
                             <th>Cliente desde</th>
-                            <th className="text-center">Ação</th>
+                            <th className="text-center" style={{ width: '120px' }}>Ação</th>
                         </tr>
                     </thead>
-                    <tbody style={{ borderTop: 'none' }}>
+                    <tbody>
 
                         {data.map(cliente => (
                             <tr key={cliente.id}>
@@ -82,11 +92,33 @@ export const ListarCliente = () => {
                                 <td>{cliente.nascimento}</td>
 
                                 <td>{cliente.clienteDesde}</td>
-                                <td className="text-center align-middle">
-                                    <Link to={"/listar-pedido/" + cliente.id}
-                                        className="btn btn-outline-primary">
-                                        Consultar
-                                    </Link>
+                                <td>
+                                    <div className="d-flex text-center align-middle">
+                                        <TooltipItem
+                                            id={1}
+                                            item={{
+                                                placement: 'bottom',
+                                                text: 'Bottom'
+                                            }}
+                                        />
+                                        <Link to={"/listapedido/" + cliente.id}>
+                                            <Button className="btn btn-sm m-1 btn-success p-1">
+                                                <VisibilityIcon />
+                                            </Button>
+                                        </Link>
+
+                                        <Link to={"/listapedido/" + cliente.id}>
+                                            <Button className="btn btn-sm m-1 btn-warning p-1">
+                                                <EditIcon />
+                                            </Button>
+                                        </Link>
+
+                                        <Link to={"/listapedido/" + cliente.id}>
+                                            <Button className="btn btn-sm btn-danger m-1 p-1">
+                                                <DeleteForeverIcon />
+                                            </Button>
+                                        </Link>
+                                    </div>
                                 </td>
                             </tr>
                         ))}

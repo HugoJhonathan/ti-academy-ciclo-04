@@ -4,6 +4,8 @@ import { Link } from "react-router-dom";
 import { Alert, Button, Container, Form, FormGroup, Input, Label } from "reactstrap";
 import { api } from "../../../config";
 
+let day = new Date().toLocaleDateString("en-CA",{year:"numeric",month:"2-digit", day:"2-digit"}).replace('/','-');
+
 export const CadastrarCliente = () => {
 
 
@@ -73,6 +75,7 @@ export const CadastrarCliente = () => {
                         Nome
                     </Label>
                     <Input
+                        required="true"
                         name="nome"
                         placeholder="Nome do serviço"
                         type="text"
@@ -84,6 +87,7 @@ export const CadastrarCliente = () => {
                         Endereço
                     </Label>
                     <Input
+                    required="true"
                         name="endereco"
                         placeholder="Rua, Número e bairro"
                         type="text"
@@ -95,6 +99,7 @@ export const CadastrarCliente = () => {
                         Cidade
                     </Label>
                     <Input
+                    required="true"
                         name="cidade"
                         placeholder="Cidade"
                         type="text"
@@ -106,6 +111,7 @@ export const CadastrarCliente = () => {
                         UF
                     </Label>
                     <Input
+                    required="true"
                         name="uf"
                         placeholder="Estado"
                         type="text"
@@ -117,8 +123,9 @@ export const CadastrarCliente = () => {
                         Data de nascimento
                     </Label>
                     <Input
+                    required="true"
                         name="nascimento"
-                        placeholder="__/__/__"
+                        
                         type="date"
                         onChange={valorInput}
                     />
@@ -129,9 +136,10 @@ export const CadastrarCliente = () => {
                         Cliente Desde
                     </Label>
                     <Input
+                        required="true"
                         name="clienteDesde"
                         placeholder=""
-                        // value= {new Date().toLocaleDateString('pt-br', {year: 'numeric', month: 'numeric', day: 'numeric'})}
+                        max={day}
                         type="date"
                         onChange={valorInput}
                     />

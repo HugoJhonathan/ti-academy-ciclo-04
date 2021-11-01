@@ -1,0 +1,10 @@
+table tr{
+    vertical-align: middle !important;
+}
+table tbody{
+    border-top: none !important;
+}
+table tr td:nth-child(1), table tr th:nth-child(1){
+    text-align: center !important;
+    font-weight: bold !important;
+}

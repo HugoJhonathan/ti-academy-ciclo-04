@@ -1,9 +1,15 @@
 import axios from "axios";
 import { api } from '../../../config/'
 
-import { Container, Table, Alert } from "reactstrap"
+import { Container, Table, Alert, FormGroup, Label, Input, Button } from "reactstrap"
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+
+import VisibilityIcon from '@material-ui/icons/Visibility';
+import AddIcon from '@material-ui/icons/Add';
+import EditIcon from '@material-ui/icons/Edit';
+import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
+
 
 export const ListarServico = () => {
     //   dados obtidos
@@ -57,27 +63,44 @@ export const ListarServico = () => {
                 </Alert> : ''}
             </div>
             <div className="p-2">
+            
                 <Table hover striped bordered>
+                
                     <thead>
                         <tr>
                             <th >ID</th>
                             <th>Nome</th>
                             <th>Descrição</th>
-                            <th className="text-center">Ação</th>
+                            <th className="text-center" style={{width: '120px'}}>Ação</th>
                         </tr>
                     </thead>
                     <tbody style={{ borderTop: 'none' }}>
 
                         {data.map(item => (
                             <tr key={item.id}>
-                                <td className="align-middle">{item.id}</td>
-                                <td className="align-middle">{item.nome}</td>
-                                <td className="align-middle">{item.descricao}</td>
-                                <td className="text-center align-middle">
-                                    <Link to={"/listar-pedido/" + item.id}
-                                        className="btn btn-outline-primary">
-                                        Consultar
-                                    </Link>
+                                <td>{item.id}</td>
+                                <td>{item.nome}</td>
+                                <td>{item.descricao}</td>
+                                <td className="d-flex text-center">
+                                <div className="d-flex text-center align-middle">
+                                        <Link to={"/listar-pedido/" + item.id}>
+                                            <Button className="btn btn-sm m-1 btn-success p-1">
+                                                <VisibilityIcon />
+                                            </Button>
+                                        </Link>
+
+                                        <Link to={"/atualizaservico/" + item.id}>
+                                            <Button className="btn btn-sm m-1 btn-warning p-1">
+                                                <EditIcon />
+                                            </Button>
+                                        </Link>
+
+                                        <Link to={"/listapedido/" + item.id}>
+                                            <Button className="btn btn-sm btn-danger m-1 p-1">
+                                                <DeleteForeverIcon />
+                                            </Button>
+                                        </Link>
+                                    </div>  
                                 </td>
                             </tr>
                         ))}
