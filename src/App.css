@@ -4,7 +4,17 @@ table tr{
 table tbody{
     border-top: none !important;
 }
+table tfoot{
+    border-top: none !important;
+}
+
 table tr td:nth-child(1), table tr th:nth-child(1){
     text-align: center !important;
     font-weight: bold !important;
+}
+.modal-open{
+    padding:0px !important;
+}
+.row{
+    --bs-gutter-x: 0.5rem !important;
 }

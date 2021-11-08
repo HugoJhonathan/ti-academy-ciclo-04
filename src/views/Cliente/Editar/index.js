@@ -1,37 +1,44 @@
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Alert, Button, Container, Form, FormGroup, Input, Label } from "reactstrap";
 import { api } from "../../../config";
+import VisibilityIcon from '@material-ui/icons/Visibility';
 
-let day = new Date().toLocaleDateString("en-CA", { year: "numeric", month: "2-digit", day: "2-digit" }).replace('/', '-');
-
-export const CadastrarCliente = () => {
-
-    const [cliente, setCliente] = useState({
-        nome: "",
-        descricao: ""
-    });
-
+export const EditarCliente = (props) => {
+    const [id, setId] = useState(props.match.params.id);
+    const [data, setData] = useState([]);
     const [status, setStatus] = useState({
         type: "",
         message: ""
-    })
-
-    const valorInput = e => setCliente({
-        ...cliente, [e.target.name]: e.target.value
     });
 
-    const cadCliente = async e => {
-        e.preventDefault();
-        console.log(cliente);
+    const getCliente = async () => {
+        await axios.get(api + '/listacliente/' + id)
+            .then((response) => {
+                console.log(response.data.clientes[0]);
+                setData(response.data.clientes[0]);
+            })
+            .catch(() => {
+                setStatus({
+                    type: 'error',
+                    message: 'Erro: sem conexão com a APd.',
+                });
+            })
+    }
 
+    const valorInput = e => setData({
+        ...data, [e.target.name]: e.target.value
+    });
+
+    const attCliente = async e => {
+        e.preventDefault();
         const headers = {
             'Content-Type': 'application/json'
         }
-
-        await axios.post(api + '/cliente', cliente, { headers })
+        await axios.put(api + `/atualizarcliente/${id}`, data, { headers })
             .then((response) => {
+                console.log('data', data);
                 if (response.data.error) {
                     setStatus({
                         type: 'error',
@@ -44,33 +51,36 @@ export const CadastrarCliente = () => {
                     });
                 }
             }).catch(() => {
-                setStatus({
-                    type: 'error',
-                    message: 'Sem conexão com API'
-                });
                 console.log("Sem conexão com API");
             })
     }
+
+    useEffect(() => {
+        getCliente();
+
+    }, [id]);
 
     return (
         <Container>
             <div className="p-2">
                 <div className="d-flex">
                     <div className="p-2 m-auto">
-                        <h1>Cadastrar Cliente</h1>
+                        <h1>Editar Cliente</h1>
                     </div>
+
                     <div style={{ margin: 'auto 0' }}>
-                        <Link to="/listar-cliente" className="btn btn-outline-dark    btn-sm">
-                            Visualizar Clientes
+                        <Link to="/listar-cliente"
+                            className="btn btn-primary btn d-flex align-items-center">
+                            <VisibilityIcon style={{ marginRight: "8px" }} />Ver Clientes
                         </Link>
                     </div>
 
                 </div>
-
                 {status.type === 'error' ? <Alert color="danger">{status.message}</Alert> : ''}
                 {status.type === 'success' ? <Alert color="success">{status.message}</Alert> : ''}
             </div>
-            <Form onSubmit={cadCliente}>
+
+            <Form onSubmit={attCliente}>
                 <FormGroup className="p-2">
                     <Label>
                         Nome
@@ -78,8 +88,9 @@ export const CadastrarCliente = () => {
                     <Input
                         required
                         name="nome"
-                        placeholder="Nome do serviço"
+                        placeholder="Nome completo"
                         type="text"
+                        defaultValue={data.nome}
                         onChange={valorInput}
                         autoFocus
                     />
@@ -91,8 +102,9 @@ export const CadastrarCliente = () => {
                     <Input
                         required
                         name="endereco"
-                        placeholder="Rua, Número e bairro"
+                        placeholder="Endereço"
                         type="text"
+                        defaultValue={data.endereco}
                         onChange={valorInput}
                     />
                 </FormGroup>
@@ -105,6 +117,7 @@ export const CadastrarCliente = () => {
                         name="cidade"
                         placeholder="Cidade"
                         type="text"
+                        defaultValue={data.cidade}
                         onChange={valorInput}
                     />
                 </FormGroup>
@@ -115,48 +128,33 @@ export const CadastrarCliente = () => {
                     <Input
                         required
                         name="uf"
-                        placeholder="Estado"
+                        placeholder="Estado / UF"
                         type="text"
+                        defaultValue={data.uf}
                         onChange={valorInput}
                     />
                 </FormGroup>
                 <FormGroup className="p-2">
                     <Label>
-                        Data de nascimento
+                        Nascimento
                     </Label>
                     <Input
                         required
                         name="nascimento"
-
                         type="date"
-                        onChange={valorInput}
-                    />
-                </FormGroup>
-
-                <FormGroup className="p-2">
-                    <Label>
-                        Cliente Desde
-                    </Label>
-                    <Input
-                        required
-                        name="clienteDesde"
-                        placeholder=""
-                        max={day}
-                        type="date"
+                        defaultValue={data.nascimento}
                         onChange={valorInput}
                     />
                 </FormGroup>
                 <div className="d-flex justify-content-between p-2">
                     <Button type="reset" outline color="danger">
-                        Limpar
+                        Resetar
                     </Button>
                     <Button type="submit" color="success">
-                        Cadastrar
+                        Atualizar
                     </Button>
-
                 </div>
             </Form>
         </Container>
-
     );
 };

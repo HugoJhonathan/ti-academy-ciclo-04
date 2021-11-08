@@ -3,24 +3,23 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Alert, Button, Container, Form, FormGroup, Input, Label } from "reactstrap";
 import { api } from "../../../config";
+import VisibilityIcon from '@material-ui/icons/Visibility';
 
 export const CadastrarServico = () => {
 
-
     const [servico, setServico] = useState({
-        nome:"",
-        descricao:""
+        nome: "",
+        descricao: ""
     });
-
     const [status, setStatus] = useState({
-        type:"",
-        message:""
-    })
+        type: "",
+        message: ""
+    });
     const valorInput = e => setServico({
-        ...servico,[e.target.name]: e.target.value
+        ...servico, [e.target.name]: e.target.value
     });
 
-    const cadServico = async e =>{
+    const cadServico = async e => {
         e.preventDefault();
         console.log(servico);
 
@@ -28,44 +27,43 @@ export const CadastrarServico = () => {
             'Content-Type': 'application/json'
         }
 
-        await axios.post(api+'/servicos', servico, {headers})
-        .then((response)=>{
-            if(response.data.error){
+        await axios.post(api + '/servicos', servico, { headers })
+            .then((response) => {
+                if (response.data.error) {
+                    setStatus({
+                        type: 'error',
+                        message: response.data.message
+                    });
+                } else {
+                    setStatus({
+                        type: 'success',
+                        message: response.data.message
+                    });
+                }
+            }).catch(() => {
                 setStatus({
                     type: 'error',
-                    message: response.data.message
+                    message: 'Sem conexão com API'
                 });
-            }else{
-                setStatus({
-                    type: 'success',
-                    message: response.data.message
-                }); 
-            }
-        }).catch(()=>{
-            console.log("Sem conexão com API");
-        })
-
+                console.log("Sem conexão com API");
+            });
     }
-
-
-
     return (
         <Container>
             <div className="p-2">
-            <div className="d-flex">
-                <div className="p-2 m-auto">
-                    <h1>Cadastrar Serviço</h1>
+                <div className="d-flex">
+                    <div className="p-2 m-auto">
+                        <h1>Novo Serviço</h1>
+                    </div>
+                    <div style={{ margin: 'auto 0' }}>
+                        <Link to="/listar-servicos"
+                            className="btn btn-primary btn d-flex align-items-center">
+                            <VisibilityIcon style={{marginRight:"8px"}} />Ver Serviços
+                        </Link>
+                    </div>
                 </div>
-                <div style={{margin:'auto 0'}}>
-                    <Link to="/listar-servicos" className="btn btn-outline-dark    btn-sm">
-                        Visualizar Serviços
-                    </Link>
-                </div>
-
-            </div>
-           
-            {status.type === 'error' ? <Alert color="danger">{status.message}</Alert>: ''}
-            {status.type === 'success' ? <Alert color="success">{status.message}</Alert>: ''}
+                {status.type === 'error' ? <Alert color="danger">{status.message}</Alert> : ''}
+                {status.type === 'success' ? <Alert color="success">{status.message}</Alert> : ''}
             </div>
             <Form onSubmit={cadServico}>
                 <FormGroup className="p-2">
@@ -76,8 +74,9 @@ export const CadastrarServico = () => {
                         name="nome"
                         placeholder="Nome do serviço"
                         type="text"
-                        
                         onChange={valorInput}
+                        autoFocus
+                        required
                     />
                 </FormGroup>
                 <FormGroup className="p-2">
@@ -89,19 +88,19 @@ export const CadastrarServico = () => {
                         placeholder="Descrição do serviço"
                         type="text"
                         onChange={valorInput}
+                        required
                     />
                 </FormGroup>
                 <div className="d-flex justify-content-between p-2">
-                <Button type="reset" outline color="danger">
-                    Limpar
-                </Button>
-                <Button type="submit" color="success">
-                    Cadastrar
-                </Button>
-               
+                    <Button type="reset" outline color="danger">
+                        Limpar
+                    </Button>
+                    <Button type="submit" color="success">
+                        Cadastrar
+                    </Button>
+
                 </div>
             </Form>
         </Container>
-
-    );
-};
+    )
+}

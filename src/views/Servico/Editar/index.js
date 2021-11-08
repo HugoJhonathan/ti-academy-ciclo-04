@@ -3,8 +3,10 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Alert, Button, Container, Form, FormGroup, Input, Label } from "reactstrap";
 import { api } from "../../../config";
+import VisibilityIcon from '@material-ui/icons/Visibility';
 
 export const EditarServico = (props) => {
+
     const [id, setId] = useState(props.match.params.id);
 
     const [data, setData] = useState([]);
@@ -13,9 +15,9 @@ export const EditarServico = (props) => {
         type: "",
         message: ""
     });
-    
+
     const getServico = async () => {
-        await axios.get(api + '/listaservicos/'+id)
+        await axios.get(api + '/listaservicos/' + id)
             .then((response) => {
                 console.log(response.data.serv);
                 setData(response.data.serv);
@@ -25,17 +27,15 @@ export const EditarServico = (props) => {
                     type: 'error',
                     message: 'Erro: sem conexão com a APd.',
                 });
-                // console.log("Erro: sem conexão com a API.")
             })
     }
-    
+
     const valorInput = e => setData({
         ...data, [e.target.name]: e.target.value
     });
 
     const attServico = async e => {
         e.preventDefault();
-        
 
         const headers = {
             'Content-Type': 'application/json'
@@ -57,15 +57,11 @@ export const EditarServico = (props) => {
             }).catch(() => {
                 console.log("Sem conexão com API");
             })
-
     }
-
-
-   
 
     useEffect(() => {
         getServico();
-        
+
     }, [id]);
 
     return (
@@ -76,18 +72,16 @@ export const EditarServico = (props) => {
                         <h1>Editar Serviço</h1>
                     </div>
                     <div style={{ margin: 'auto 0' }}>
-                        <Link to="/listar-servicos" className="btn btn-outline-dark    btn-sm">
-                            Editar Serviço
+                        <Link to="/listar-servicos"
+                            className="btn btn-primary btn d-flex align-items-center">
+                            <VisibilityIcon style={{marginRight:"8px"}} />Ver Serviços
                         </Link>
                     </div>
-
                 </div>
-
                 {status.type === 'error' ? <Alert color="danger">{status.message}</Alert> : ''}
                 {status.type === 'success' ? <Alert color="success">{status.message}</Alert> : ''}
             </div>
 
-           
             <Form onSubmit={attServico}>
                 <FormGroup className="p-2">
                     <Label>
@@ -99,6 +93,8 @@ export const EditarServico = (props) => {
                         type="text"
                         defaultValue={data.nome}
                         onChange={valorInput}
+                        autoFocus
+                        required
                     />
                 </FormGroup>
                 <FormGroup className="p-2">
@@ -111,6 +107,7 @@ export const EditarServico = (props) => {
                         type="text"
                         defaultValue={data.descricao}
                         onChange={valorInput}
+                        required
                     />
                 </FormGroup>
                 <div className="d-flex justify-content-between p-2">
@@ -120,10 +117,8 @@ export const EditarServico = (props) => {
                     <Button type="submit" color="success">
                         Atualizar
                     </Button>
-
                 </div>
             </Form>
         </Container>
-
-    );
-};
+    )
+}
