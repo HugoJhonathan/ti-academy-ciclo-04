@@ -24,7 +24,7 @@ export const ServicosDoPedido = (props) => {
             <thead>
                 <tr>
                     <th style={{ width: "80px" }}>Qtd.</th>
-                    <th>Serviço</th>
+                    <th>Serviços</th>
                     <th>Descrição</th>
                     <th>Valor</th>
                 </tr>

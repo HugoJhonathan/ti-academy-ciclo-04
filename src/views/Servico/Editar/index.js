@@ -91,7 +91,7 @@ export const EditarServico = (props) => {
                         name="nome"
                         placeholder="Nome do serviço"
                         type="text"
-                        defaultValue={data.nome}
+                        value={data.nome}
                         onChange={valorInput}
                         autoFocus
                         required
@@ -105,7 +105,7 @@ export const EditarServico = (props) => {
                         name="descricao"
                         placeholder="Descrição do serviço"
                         type="text"
-                        defaultValue={data.descricao}
+                        value={data.descricao}
                         onChange={valorInput}
                         required
                     />

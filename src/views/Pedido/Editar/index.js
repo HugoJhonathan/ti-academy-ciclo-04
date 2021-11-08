@@ -20,7 +20,7 @@ export const EditarPedido = (props) => {
     });
 
     const [idItem, setIdItem] = useState({
-        ServicoId:'',
+        ServicoId: '',
         PedidoId: '',
         nome: ''
     });
@@ -110,13 +110,13 @@ export const EditarPedido = (props) => {
         ...data, [e.target.name]: e.target.value
     });
 
-    const attServico = async e => { 
+    const attServico = async e => {
         e.preventDefault();
 
         const headers = {
             'Content-Type': 'application/json'
         }
-        
+
         await axios.put(api + `/atualizapedido/${id}`, data, { headers })
             .then((response) => {
                 if (response.data.error) {
@@ -183,7 +183,7 @@ export const EditarPedido = (props) => {
             <div className="p-2">
                 <div className="d-flex">
                     <div className="p-2 m-auto">
-                        <h1>Editar Pedido</h1>
+                        <h1>Editar Pedido #{id} </h1>
                     </div>
 
                     <div style={{ margin: 'auto 0' }}>
@@ -215,124 +215,123 @@ export const EditarPedido = (props) => {
                 </FormGroup>
 
                 {inputList.map((item, i) => (
-                    <Row>
-                        <Col xs lg="2">
-                            <Label>
-                                ServiçoId
-                            </Label>
-                            <Input
-                                name="ServicoId"
-                                placeholder="Nome do serviços"
-                                type="number"
-                                value={item.ServicoId}
-                                onChange={e => handleChange(e, i)}
-                                disabled
-                            />
-                        </Col>
-                        <Col xs lg="2">
-                            <Label>
-                                Quantidade
-                            </Label>
-                            <Input
-                                name="quantidade"
-                                placeholder="Nome do serviços"
-                                type="number"
-                                value={item.quantidade}
-                                onChange={e => handleChange(e, i)}
-                                required
-                            />
-                        </Col>
-                        <Col>
-                            <Label>
-                                Valor
-                            </Label>
-                            <Input
-                                name="valor"
-                                placeholder="Nome do serviços"
-                                type="number"
-                                value={item.valor}
-                                onChange={e => handleChange(e, i)}
-                                required
-                            />
-                        </Col>
-                        <Col className="d-flex justify-content-left align-items-end" xs lg="2">
-                                <Button onClick={() => {setIdItem({ServicoId: item.ServicoId, PedidoId:id, nome: item.servicos.nome}); setOpenModal(true)}} className="btn btn-sm btn-danger m-1 p-1">
-                                <DeleteForeverIcon />
-                            </Button>
-                        </Col>
-                    </Row>
+                    <div className="p-2">
+                        <Row>
+                            <Col xs lg="2">
+                                <Label>
+                                    ServiçoId
+                                </Label>
+                                <Input
+                                    name="ServicoId"
+                                    placeholder="Nome do serviços"
+                                    type="number"
+                                    value={item.ServicoId}
+                                    onChange={e => handleChange(e, i)}
+                                    disabled
+                                />
+                            </Col>
+                            <Col xs lg="2">
+                                <Label>
+                                    Quantidade
+                                </Label>
+                                <Input
+                                    name="quantidade"
+                                    placeholder="Nome do serviços"
+                                    type="number"
+                                    value={item.quantidade}
+                                    onChange={e => handleChange(e, i)}
+                                    required
+                                />
+                            </Col>
+                            <Col>
+                                <Label>
+                                    Valor
+                                </Label>
+                                <Input
+                                    name="valor"
+                                    placeholder="Nome do serviços"
+                                    type="number"
+                                    value={item.valor}
+                                    onChange={e => handleChange(e, i)}
+                                    required
+                                />
+                            </Col>
+                            <Col className="d-flex justify-content-left align-items-end" xs lg="2">
+                                <Button onClick={() => { setIdItem({ ServicoId: item.ServicoId, PedidoId: id, nome: item.servicos.nome }); setOpenModal(true) }} className="btn btn-sm btn-danger m-1 p-1">
+                                    <DeleteForeverIcon />
+                                </Button>
+                            </Col>
+                        </Row>
+                    </div>
                 ))}
 
                 {itensParaAdicionar.map((item, i) => (
-                    <Row>
-                        <Col xs lg="2">
-                            <Label>
-                                ServiçoId
-                            </Label>
-                            <Input
-                                name="ServicoId"
-                                placeholder="Nome do serviços"
-                                type="number"
-                                value={item.ServicoId}
-                                onChange={e => handleChange2(e, i)}
-                                required
-                            />
-                        </Col>
-                        <Col xs lg="2">
-                            <Label>
-                                Quantidade
-                            </Label>
-                            <Input
-                                name="quantidade"
-                                placeholder="Nome do serviços"
-                                type="number"
-                                value={item.quantidade}
-                                onChange={e => handleChange2(e, i)}
-                                required
-                            />
-                        </Col>
-                        <Col>
-                            <Label>
-                                Valor
-                            </Label>
-                            <Input
-                                name="valor"
-                                placeholder="Nome do serviços"
-                                type="number"
-                                value={item.valor}
-                                onChange={e => handleChange2(e, i)}
-                                required
-                            />
-                        </Col>
-                        <Col className="d-flex justify-content-left align-items-end" xs lg="2">
-                            {inputList.length !== 1 &&
-                                <Button value="Remover" className="btn btn-sm btn-success p-1"
-                                    onClick={() => handleRemoveInput(i)}>
-                                    <DeleteForeverIcon />
-                                </Button>
-                            }
-                        </Col>
-                    </Row>
-                ))}
-                    <div className="mt-2">
-                        <Button className="ml-1 d-flex" value="Add"
-                            onClick={handleAddInput}>
-                            <AddIcon></AddIcon>Adicionar item
-                        </Button>
-
+                    <div className="p-2">
+                        <Row>
+                            <Col xs lg="2">
+                                <Label>
+                                    ServiçoId
+                                </Label>
+                                <Input
+                                    name="ServicoId"
+                                    placeholder="ID do Serviço"
+                                    type="number"
+                                    value={item.ServicoId}
+                                    onChange={e => handleChange2(e, i)}
+                                    required
+                                />
+                            </Col>
+                            <Col xs lg="2">
+                                <Label>
+                                    Quantidade
+                                </Label>
+                                <Input
+                                    name="quantidade"
+                                    placeholder="Qtd."
+                                    type="number"
+                                    value={item.quantidade}
+                                    onChange={e => handleChange2(e, i)}
+                                    required
+                                />
+                            </Col>
+                            <Col>
+                                <Label>
+                                    Valor
+                                </Label>
+                                <Input
+                                    name="valor"
+                                    placeholder="Valor"
+                                    type="number"
+                                    value={item.valor}
+                                    onChange={e => handleChange2(e, i)}
+                                    required
+                                />
+                            </Col>
+                            <Col className="d-flex justify-content-left align-items-end" xs lg="2">
+                                {inputList.length !== 1 &&
+                                    <Button value="Remover" className="btn btn-sm btn-success p-1"
+                                        onClick={() => handleRemoveInput(i)}>
+                                        <DeleteForeverIcon />
+                                    </Button>
+                                }
+                            </Col>
+                        </Row>
                     </div>
-                
+                ))}
+
                 <div className="d-flex justify-content-between p-2">
-                    <Button type="reset" outline color="danger">
-                        Resetar
+                <Button className="ml-1 d-flex" value="Add"
+                        onClick={handleAddInput}>
+                        <AddIcon></AddIcon>Adicionar item
                     </Button>
                     <Button type="submit" color="success">
                         Atualizar
                     </Button>
 
                 </div>
+
             </Form>
-            {openModal && <ModalExclusao url={'/excluiritempedido/'+id} item={idItem} itemDeletar="ServicoId" atualizar={() => handleRemoveInput()} closeModal={setOpenModal} />}
+            {openModal && <ModalExclusao url={'/excluiritempedido/' + id} item={idItem} itemDeletar="ServicoId" atualizar={() => handleRemoveInput()} closeModal={setOpenModal} />}
         </Container>
 
     )

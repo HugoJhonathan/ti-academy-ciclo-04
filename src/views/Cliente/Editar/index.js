@@ -90,7 +90,7 @@ export const EditarCliente = (props) => {
                         name="nome"
                         placeholder="Nome completo"
                         type="text"
-                        defaultValue={data.nome}
+                        value={data.nome}
                         onChange={valorInput}
                         autoFocus
                     />
@@ -104,7 +104,7 @@ export const EditarCliente = (props) => {
                         name="endereco"
                         placeholder="Endereço"
                         type="text"
-                        defaultValue={data.endereco}
+                        value={data.endereco}
                         onChange={valorInput}
                     />
                 </FormGroup>
@@ -117,7 +117,7 @@ export const EditarCliente = (props) => {
                         name="cidade"
                         placeholder="Cidade"
                         type="text"
-                        defaultValue={data.cidade}
+                        value={data.cidade}
                         onChange={valorInput}
                     />
                 </FormGroup>
@@ -130,7 +130,7 @@ export const EditarCliente = (props) => {
                         name="uf"
                         placeholder="Estado / UF"
                         type="text"
-                        defaultValue={data.uf}
+                        value={data.uf}
                         onChange={valorInput}
                     />
                 </FormGroup>
@@ -142,7 +142,7 @@ export const EditarCliente = (props) => {
                         required
                         name="nascimento"
                         type="date"
-                        defaultValue={data.nascimento}
+                        value={data.nascimento}
                         onChange={valorInput}
                     />
                 </FormGroup>
