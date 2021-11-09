@@ -10,7 +10,7 @@ import EditIcon from '@material-ui/icons/Edit';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import { ModalExclusao } from "../../../components/modalExclusao";
 
-export const ListarServico = () => {
+export const ListarProduto = () => {
     //   dados obtidos
     const [data, setData] = useState([]);
 
@@ -28,17 +28,16 @@ export const ListarServico = () => {
     const [id, setId] = useState();
 
     const getServicos = async () => {
-        await axios.get(api + '/listaservicos')
+        await axios.get(api + '/listaprodutos')
             .then((response) => {
-                console.log(response.data.servicos);
-                setData(response.data.servicos);
+                console.log(response.data.produto);
+                setData(response.data.produto);
             })
             .catch(() => {
                 setStatus({
                     type: 'error',
                     message: 'Erro: sem conexão com a API.',
                 });
-                // console.log("Erro: sem conexão com a API.")
             })
     }
 
@@ -46,21 +45,19 @@ export const ListarServico = () => {
         getServicos();
     }, []);
 
-
-
     return (
 
         <Container>
             <div className="p-2">
                 <div className="d-flex">
                     <div className="p-2 m-auto">
-                        <h1>Visualizar Serviços</h1>
+                        <h1>Visualizar Produtos</h1>
                     </div>
 
                     <div style={{ margin: 'auto 0' }}>
-                        <Link to="/cadastrarservico"
+                        <Link to="/cadastrarproduto"
                             className="btn btn-primary btn d-flex align-items-center">
-                            <AddIcon />Cadastrar Serviço
+                            <AddIcon />Cadastrar Produto
                         </Link>
                     </div>
 
@@ -90,22 +87,22 @@ export const ListarServico = () => {
                                 <td>{item.descricao}</td>
                                 <td className="d-flex text-center">
                                     <div className="d-flex text-center align-middle">
-                                        <Link to={"/listar-pedido/" + item.id}>
+                                        <Link to={"/listar-produto/" + item.id}>
                                             <Button className="btn btn-sm m-1 btn-success p-1">
                                                 <VisibilityIcon />
                                             </Button>
                                         </Link>
 
-                                        <Link to={"/atualizaservico/" + item.id}>
+                                        <Link to={"/atualizaproduto/" + item.id}>
                                             <Button className="btn btn-sm m-1 btn-warning p-1">
                                                 <EditIcon />
                                             </Button>
                                         </Link>
 
+
                                         <Button onClick={() => { setId(item.id); setIdItem({ id: id, nome: item.nome }); setOpenModal(true) }} className="btn btn-sm btn-danger m-1 p-1">
                                             <DeleteForeverIcon />
                                         </Button>
-
                                     </div>
                                 </td>
                             </tr>
@@ -114,7 +111,7 @@ export const ListarServico = () => {
                     </tbody>
                 </Table> : ""}
             </div>
-            {openModal && <ModalExclusao url={'/excluirservico/' + id} item={idItem} itemDeletar="key" atualizar={() => getServicos()} closeModal={setOpenModal} />}
+            {openModal && <ModalExclusao url={'/excluirproduto/' + id} item={idItem} itemDeletar="key" atualizar={() => getServicos()} closeModal={setOpenModal} />}
         </Container>
 
 

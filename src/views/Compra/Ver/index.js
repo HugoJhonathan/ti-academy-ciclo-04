@@ -8,7 +8,7 @@ import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import { ModalExclusao } from "../../../components/modalExclusao";
 import EditIcon from '@material-ui/icons/Edit';
 
-export const VerPedido = (props) => {
+export const VerCompra = (props) => {
 
     const [openModal, setOpenModal] = useState(false);
 
@@ -30,9 +30,9 @@ export const VerPedido = (props) => {
     });
 
     const getItens = async () => {
-        await axios.get(`${api}/pedido/${id}`)
+        await axios.get(`${api}/compra/${id}`)
             .then((response) => {
-
+                
                 setData(response.data.ped);
 
             })
@@ -54,14 +54,14 @@ export const VerPedido = (props) => {
                 <div className="p-2">
                     <div className="d-flex">
                         <div className="p-2 m-auto">
-                            <h1>Pedido #{id}</h1>
+                            <h1>Compra #{id}</h1>
                             <h3>{data.clientes.nome}</h3>
                         </div>
 
                         <div style={{ margin: 'auto 0' }}>
-                            <Link to={"/atualizapedido/" + id}
+                            <Link to={"/atualizacompra/" + id}
                                 className="btn btn-dark btn d-flex align-items-center">
-                                <EditIcon />Editar Pedido
+                                <EditIcon />Editar Compra
                             </Link>
                         </div>
 
@@ -83,15 +83,15 @@ export const VerPedido = (props) => {
                             </thead>
                             <tbody>
                                 {
-                                    data.item_pedidos.map((item, index) => (
-                                        totalPedido += Number(data.item_pedidos[index].valor * data.item_pedidos[index].quantidade),
-                                        <tr key={data.servicos_ped[index].ServicoId}>
+                                    data.item_compra.map((item, index) => (
+                                        totalPedido += Number(data.item_compra[index].valor * data.item_compra[index].quantidade),
+                                        <tr key={data.produtos_comp[index].ServicoId}>
                                             <td>{data.data}</td>
-                                            <td>{data.item_pedidos[index].quantidade}</td>
-                                            <td>{data.servicos_ped[index].nome}</td>
-                                            <td>{data.servicos_ped[index].descricao}</td>
+                                            <td>{data.item_compra[index].quantidade}</td>
+                                            <td>{data.item_compra[index].nome}</td>
+                                            <td>{data.item_compra[index].descricao}</td>
                                             <td>
-                                                {data.item_pedidos[index].valor.toLocaleString('pt-br',
+                                                {data.item_compra[index].valor.toLocaleString('pt-br',
                                                     { style: 'currency', currency: 'BRL' })
                                                 }
                                             </td>
@@ -106,12 +106,12 @@ export const VerPedido = (props) => {
                             </tfoot>
                         </Table>
 
-                        <Button onClick={() => { setIdItem({ id: id, nome: "Pedido #" + id }); setOpenModal(true) }} className="btn btn-sm btn-danger mt-2 p-1 d-flex align-items-center">
-                            <DeleteForeverIcon /> Deletar Pedido
+                        <Button onClick={() => { setIdItem({ id: id, nome: "Compra #" + id }); setOpenModal(true) }} className="btn btn-sm btn-danger mt-2 p-1 d-flex align-items-center">
+                            <DeleteForeverIcon /> Deletar Compra
                         </Button>
                     </>
                     : ''}
-                {openModal && <ModalExclusao url={'/excluirpedido/' + id} item={idItem} itemDeletar="key" atualizar={() => getItens()} closeModal={setOpenModal} />}
+                {openModal && <ModalExclusao url={'/excluircompra/' + id} item={idItem} itemDeletar="key" atualizar={() => getItens()} closeModal={setOpenModal} />}
 
             </Container>
         </div>

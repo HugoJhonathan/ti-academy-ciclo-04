@@ -7,7 +7,7 @@ import VisibilityIcon from '@material-ui/icons/Visibility';
 import AddIcon from '@material-ui/icons/Add';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 
-export const CadastrarPedido = () => {
+export const CadastrarCompra = () => {
 
     const [pedido, setPedido] = useState({
         data: "",
@@ -29,7 +29,7 @@ export const CadastrarPedido = () => {
         const headers = {
             'Content-Type': 'application/json'
         }
-        await axios.post(api + '/cliente/' + pedido.nome + '/pedido', pedido, { headers })
+        await axios.post(api + '/cliente/' + pedido.nome + '/compra', pedido, { headers })
             .then((response) => {
                 console.log('response', response.data);
                 if (response.data.error) {
@@ -57,7 +57,7 @@ export const CadastrarPedido = () => {
 
 
     const [listaItemPedido, setListaItemPedido] = useState([
-        { ServicoId: '', quantidade: '', valor: '' }
+        { ProdutoId: '', quantidade: '', valor: '' }
     ]);
 
     const valorInputItemPedido = (e, index) => {
@@ -68,7 +68,7 @@ export const CadastrarPedido = () => {
     }
 
     const adicionarItemPedido = () => {
-        setListaItemPedido([...listaItemPedido, { ServicoId: '', quantidade: '', valor: '' }]);
+        setListaItemPedido([...listaItemPedido, { ProdutoId: '', quantidade: '', valor: '' }]);
     }
 
     const btnRemoverItem = (index) => {
@@ -81,7 +81,7 @@ export const CadastrarPedido = () => {
         const headers = {
             'Content-Type': 'application/json'
         }
-        await axios.post(api + '/itempedido/' + id, item, { headers })
+        await axios.post(api + '/itemcompra/' + id, item, { headers })
             .then((response) => {
                 if (response.data.error) {
                     setStatus({
@@ -103,7 +103,7 @@ export const CadastrarPedido = () => {
             <div className="p-2">
                 <div className="d-flex">
                     <div className="p-2 m-auto">
-                        <h1>Novo Pedido</h1>
+                        <h1>Nova Compra</h1>
                     </div>
                     <div style={{ margin: 'auto 0' }}>
                         <Link to="/listar-pedido"
@@ -137,14 +137,14 @@ export const CadastrarPedido = () => {
                                 <Row>
                                     <Col xs lg="2">
                                         <Label>
-                                            ServiçoId
+                                            ProdutoId
                                         </Label>
                                         <Input
                                             required
-                                            name="ServicoId"
+                                            name="ProdutoId"
                                             placeholder="Nome do serviços"
                                             type="number"
-                                            value={item.ServicoId}
+                                            value={item.ProdutoId}
                                             onChange={e => valorInputItemPedido(e, i)}
                                         />
                                     </Col>

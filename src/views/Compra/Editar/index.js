@@ -8,11 +8,12 @@ import AddIcon from '@material-ui/icons/Add';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import { ModalExclusao } from "../../../components/modalExclusao";
 
-export const EditarPedido = (props) => {
+export const EditarCompra = (props) => {
     const [id, setId] = useState(props.match.params.id);
 
-    const [data, setData] = useState([]);
-
+    const [data, setData] = useState({
+        data:""
+    });
 
     const [status, setStatus] = useState({
         type: "",
@@ -20,8 +21,8 @@ export const EditarPedido = (props) => {
     });
 
     const [idItem, setIdItem] = useState({
-        ServicoId: '',
-        PedidoId: '',
+        ProdutoId: '',
+        CompraId: '',
         nome: ''
     });
 
@@ -46,7 +47,7 @@ export const EditarPedido = (props) => {
     }
 
     const handleAddInput = () => {
-        setItensParaAdicionar([...itensParaAdicionar, { ServicoId: '', quantidade: '', valor: '' }]);
+        setItensParaAdicionar([...itensParaAdicionar, { ProdutoId: '', quantidade: '', valor: '' }]);
     }
 
     const handleRemoveInput = (index) => {
@@ -57,7 +58,7 @@ export const EditarPedido = (props) => {
     }
 
     const getServico = async () => {
-        await axios.get(api + '/pedido/' + id)
+        await axios.get(api + '/compra/' + id)
             .then((response) => {
                 console.log('response', response.data.ped);
                 setData(response.data.ped);
@@ -70,7 +71,7 @@ export const EditarPedido = (props) => {
             })
     }
     const getItensServico = async () => {
-        await axios.get(api + '/pedido/' + id + '/servicos/')
+        await axios.get(api + '/compra/' + id + '/produtos/')
             .then((response) => {
                 console.log('response', response.data.item);
                 setInputList(response.data.item);
@@ -89,7 +90,7 @@ export const EditarPedido = (props) => {
             'Content-Type': 'application/json'
         }
 
-        await axios.post(api + '/itempedido/' + id, item, { headers })
+        await axios.post(api + '/itemcompra/' + id, item, { headers })
             .then((response) => {
                 if (response.data.error) {
                     setStatus({
@@ -117,7 +118,7 @@ export const EditarPedido = (props) => {
             'Content-Type': 'application/json'
         }
 
-        await axios.put(api + `/atualizapedido/${id}`, data, { headers })
+        await axios.put(api + `/atualizacompra/${id}`, data, { headers })
             .then((response) => {
                 if (response.data.error) {
                     setStatus({
@@ -151,7 +152,7 @@ export const EditarPedido = (props) => {
         }
 
         console.log('item', item);
-        await axios.put(api + `/pedidos/${id}/editaritem`, item, { headers })
+        await axios.put(api + `/compras/${id}/editaritem`, item, { headers })
             .then((response) => {
                 if (response.data.error) {
                     setStatus({
@@ -183,13 +184,13 @@ export const EditarPedido = (props) => {
             <div className="p-2">
                 <div className="d-flex">
                     <div className="p-2 m-auto">
-                        <h1>Editar Pedido #{id} </h1>
+                        <h1>Editar Compra #{id} </h1>
                     </div>
 
                     <div style={{ margin: 'auto 0' }}>
-                        <Link to="/listar-pedido"
+                        <Link to="/listar-compras"
                             className="btn btn-primary btn d-flex align-items-center">
-                            <VisibilityIcon style={{ marginRight: "8px" }} />Ver Pedidos
+                            <VisibilityIcon style={{ marginRight: "8px" }} />Ver Compras
                         </Link>
                     </div>
 
@@ -199,21 +200,23 @@ export const EditarPedido = (props) => {
             </div>
 
             <Form onSubmit={attServico}>
-                <FormGroup className="p-2">
-                    <Label>
-                        Data
-                    </Label>
-                    <Input
-                        name="data"
-                        placeholder="Nome do serviço"
-                        type="date"
-                        defaultValue={data.data}
-                        onChange={valorInput}
-                        autoFocus
-                        required
-                    />
-                </FormGroup>
-
+                
+                    <FormGroup className="p-2">
+                        <Label>
+                            Data
+                        </Label>
+                        
+                        <Input
+                            name="data"
+                            placeholder="Nome do serviço"
+                            type="date"
+                            defaultValue={data.data}
+                            onChange={valorInput}
+                            autoFocus
+                            required
+                        />
+                    </FormGroup>
+                    
                 {inputList.map((item, i) => (
                     <div className="p-2">
                         <Row>
@@ -222,10 +225,10 @@ export const EditarPedido = (props) => {
                                     ServiçoId
                                 </Label>
                                 <Input
-                                    name="ServicoId"
+                                    name="ProdutoId"
                                     placeholder="Nome do serviços"
                                     type="number"
-                                    value={item.ServicoId}
+                                    value={item.ProdutoId}
                                     onChange={e => handleChange(e, i)}
                                     disabled
                                 />
@@ -257,7 +260,7 @@ export const EditarPedido = (props) => {
                                 />
                             </Col>
                             <Col className="d-flex justify-content-left align-items-end" xs lg="2">
-                                <Button onClick={() => { setIdItem({ ServicoId: item.ServicoId, PedidoId: id, nome: item.servicos.nome }); setOpenModal(true) }} className="btn btn-sm btn-danger m-1 p-1">
+                                <Button onClick={() => { setIdItem({ ProdutoId: item.ProdutoId, CompraId: id, nome:''}); setOpenModal(true) }} className="btn btn-sm btn-danger m-1 p-1">
                                     <DeleteForeverIcon />
                                 </Button>
                             </Col>
@@ -273,10 +276,10 @@ export const EditarPedido = (props) => {
                                     ServiçoId
                                 </Label>
                                 <Input
-                                    name="ServicoId"
+                                    name="ProdutoId"
                                     placeholder="ID do Serviço"
                                     type="number"
-                                    value={item.ServicoId}
+                                    value={item.ProdutoId}
                                     onChange={e => handleChange2(e, i)}
                                     required
                                 />
@@ -320,7 +323,7 @@ export const EditarPedido = (props) => {
                 ))}
 
                 <div className="d-flex justify-content-between p-2">
-                <Button className="ml-1 d-flex" value="Add"
+                    <Button className="ml-1 d-flex" value="Add"
                         onClick={handleAddInput}>
                         <AddIcon></AddIcon>Adicionar item
                     </Button>
@@ -331,7 +334,7 @@ export const EditarPedido = (props) => {
                 </div>
 
             </Form>
-            {openModal && <ModalExclusao url={'/excluiritempedido/' + id} item={idItem} itemDeletar="ServicoId" atualizar={() => handleRemoveInput()} closeModal={setOpenModal} />}
+            {openModal && <ModalExclusao url={'/excluiritemcompra/' + id} item={idItem} itemDeletar="ProdutoId" atualizar={() => handleRemoveInput()} closeModal={setOpenModal} />}
         </Container>
 
     )

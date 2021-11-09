@@ -28,6 +28,12 @@ export const Menu = (props) => {
                             <NavItem>
                                 <NavLink href="/listar-servicos">Serviços</NavLink>
                             </NavItem>
+                            <NavItem>
+                                <NavLink href="/listar-produtos">Produtos</NavLink>
+                            </NavItem>
+                            <NavItem>
+                                <NavLink href="/listar-compras">Compra</NavLink>
+                            </NavItem>
                         </Nav>
                     </Collapse>
                 </Container>
