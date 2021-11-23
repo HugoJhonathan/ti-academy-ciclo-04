@@ -1,17 +1,16 @@
 import axios from "axios";
 import { api } from '../../../config/'
 
-import { Container, Table, Alert, Button } from "reactstrap"
+import { Container, Table } from "reactstrap"
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import VisibilityIcon from '@material-ui/icons/Visibility';
-import AddIcon from '@material-ui/icons/Add';
-import EditIcon from '@material-ui/icons/Edit';
-import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import { ModalExclusao } from "../../../components/modalExclusao";
+import { BotoesDeAcao } from "../../../components/botoesDeAcao";
+import { TituloEBotao } from "../../../components/tituloEbotao";
 let x = 0;
 
 export const ListarPedidos = () => {
+
+    document.title = "TIAcademy | Pedidos"
 
     const [data, setData] = useState([]);
 
@@ -24,6 +23,14 @@ export const ListarPedidos = () => {
         id: '',
         nome: ''
     });
+
+    const totalItens = (item_pedidos) => {
+        x = 0;
+        item_pedidos.forEach(function (nome, i) {
+            x += nome.valor * nome.quantidade;
+        });
+        return x.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' });
+    }
 
     const [openModal, setOpenModal] = useState(false);
     const [id, setId] = useState();
@@ -48,29 +55,20 @@ export const ListarPedidos = () => {
     return (
 
         <Container>
-            <div className="p-2">
-                <div className="d-flex">
-                    <div className="p-2 m-auto">
-                        <h1>Visualizar Pedidos</h1>
-                    </div>
 
-                    <div style={{ margin: 'auto 0' }}>
-                        <Link to="/cadastrarpedido"
-                            className="btn btn-primary btn d-flex align-items-center">
-                            <AddIcon />Novo Pedido
-                        </Link>
-                    </div>
+            <TituloEBotao
+                titulo="Visualizar Pedidos"
+                btnLink="/cadastrarpedido"
+                btnText="Novo Pedido"
+                btnIcon="AddIcon"
+                status={status}
+            />
 
-                </div>
-                {status.type === 'error' ? <Alert color="danger">
-                    {status.message}
-                </Alert> : ''}
-            </div>
             <div className="p-2">
 
                 {data.length > 0 ?
 
-                    <Table hover striped bordered>
+                    <Table hover striped bordered responsive>
 
                         <thead>
                             <tr>
@@ -78,7 +76,7 @@ export const ListarPedidos = () => {
                                 <th>Data</th>
                                 <th>Cliente</th>
                                 <th>Valor Total</th>
-                                <th className="text-center" style={{ width: '120px' }}>Ação</th>
+                                <th className="text-center">Ação</th>
                             </tr>
                         </thead>
                         <tbody style={{ borderTop: '0px' }}>
@@ -89,33 +87,15 @@ export const ListarPedidos = () => {
                                     <td>{item.data}</td>
                                     <td>{item.clientes.nome}</td>
                                     <td>
-                                        {
-                                            x = 0,
-                                            item.item_pedidos.forEach(function (nome, i) {
-                                                x += nome.valor * nome.quantidade;
-                                            }),
-                                            x.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })
-                                        }
+                                        {totalItens(item.item_pedidos)}
                                     </td>
                                     <td className="d-flex text-center">
-                                        <div className="d-flex text-center align-middle">
-                                            <Link to={"/ver-pedido/" + item.id}>
-                                                <Button className="btn btn-sm m-1 btn-success p-1">
-                                                    <VisibilityIcon />
-                                                </Button>
-                                            </Link>
-
-                                            <Link to={"/atualizapedido/" + item.id}>
-                                                <Button className="btn btn-sm m-1 btn-warning p-1">
-                                                    <EditIcon />
-                                                </Button>
-                                            </Link>
-
-                                            <Button onClick={() => { setId(item.id); setIdItem({ id: id, nome: "Pedido #" + item.id }); setOpenModal(true) }} className="btn btn-sm btn-danger m-1 p-1">
-                                                <DeleteForeverIcon />
-                                            </Button>
-
-                                        </div>
+                                            <BotoesDeAcao
+                                                id={index}
+                                                linkVisualizar={"/ver-pedido/" + item.id}
+                                                linkEditar={"/atualizapedido/" + item.id}
+                                                btnExcluir={() => { setId(item.id); setIdItem({ id: id, nome: "Pedido #" + item.id }); setOpenModal(true) }}
+                                            />        
                                     </td>
                                 </tr>
                             ))}

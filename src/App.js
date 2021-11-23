@@ -1,5 +1,5 @@
 import './App.css';
-import { BrowserRouter as Router, Switch, Route} from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route} from 'react-router-dom';
 import { Menu } from './components/menu';
 
 import { Home } from './views/Home/';
@@ -37,36 +37,36 @@ function App() {
       
     <Router>
         <Menu/>
-      <Switch>
+      <Routes>
 
-          <Route exact path="/" component={Home}/>
+          <Route path="/" element={<Home/>}/>
 
-          <Route path="/cadastrarcliente" component={CadastrarCliente}/>
-          <Route path="/listar-cliente" component={ListarCliente}/>
-          <Route path="/atualizacliente/:id" component={EditarCliente}/>
-          <Route path="/listapedido/:id" component={ListaPedidoCliente}/>
+          <Route path="/cadastrarcliente" element={<CadastrarCliente/>}/>
+          <Route path="/listar-cliente" element={<ListarCliente/>}/>
+          <Route path="/atualizacliente/:id" element={<EditarCliente/>}/>
+          <Route path="/listapedido/:id" element={<ListaPedidoCliente/>}/>
 
-          <Route path="/cadastrarservico" component={CadastrarServico}/>
-          <Route path="/listar-servicos" component={ListarServico}/>
-          <Route path="/atualizaservico/:id" component={EditarServico}/>
-          <Route path="/listar-pedido/:id" component={Item}/>
+          <Route path="/cadastrarservico" element={<CadastrarServico/>}/>
+          <Route path="/listar-servicos" element={<ListarServico/>}/>
+          <Route path="/atualizaservico/:id" element={<EditarServico/>}/>
+          <Route path="/listar-pedido/:id" element={<Item/>}/>
 
-          <Route path="/ver-pedido/:id" component={VerPedido}/>
-          <Route path="/listar-pedido" component={ListarPedidos}/>
-          <Route path="/atualizapedido/:id" component={EditarPedido}/>
-          <Route path="/cadastrarpedido/" component={CadastrarPedido}/>
+          <Route path="/ver-pedido/:id" element={<VerPedido/>}/>
+          <Route path="/listar-pedido" element={<ListarPedidos/>}/>
+          <Route path="/atualizapedido/:id" element={<EditarPedido/>}/>
+          <Route path="/cadastrarpedido/" element={<CadastrarPedido/>}/>
           
-          <Route path="/listar-produtos" component={ListarProduto}/>
-          <Route path="/cadastrarproduto" component={CadastrarProduto}/>
-          <Route path="/atualizaproduto/:id" component={EditarProduto}/>
-          <Route path="/listar-produto/:id" component={ItemProduto}/>
+          <Route path="/listar-produtos" element={<ListarProduto/>}/>
+          <Route path="/cadastrarproduto" element={<CadastrarProduto/>}/>
+          <Route path="/atualizaproduto/:id" element={<EditarProduto/>}/>
+          <Route path="/listar-produto/:id" element={<ItemProduto/>}/>
 
-          <Route path="/ver-compra/:id" component={VerCompra}/>
-          <Route path="/listar-compras" component={ListarCompras}/>
-          <Route path="/atualizacompra/:id" component={EditarCompra}/>
-          <Route path="/cadastrarcompra/" component={CadastrarCompra}/>              
+          <Route path="/ver-compra/:id" element={<VerCompra/>}/>
+          <Route path="/listar-compras" element={<ListarCompras/>}/>
+          <Route path="/atualizacompra/:id" element={<EditarCompra/>}/>
+          <Route path="/cadastrarcompra/" element={<CadastrarCompra/>}/>              
     
-       </Switch>
+       </Routes>
      </Router>
     </div>
   );

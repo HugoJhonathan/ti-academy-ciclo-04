@@ -1,66 +1,63 @@
 import axios from "axios";
 import { api } from '../../../config/'
-import { Container, Table, Alert, Toast, ToastHeader, ToastBody, Button } from "reactstrap"
+import { Container, Table, Toast, ToastHeader, ToastBody, Button } from "reactstrap"
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import VisibilityIcon from '@material-ui/icons/Visibility';
+import { TituloEBotao } from "../../../components/tituloEbotao";
+
 
 export const Item = (props) => {
+    document.title = "Serviço | Informações"
 
     const [data, setData] = useState([]);
     const [total, setTotal] = useState(0);
-    let total_inc = total;
-
     const [totalQuantidade, setTotalQuantidade] = useState(0);
-    let totalQuantidadeInc = totalQuantidade;
-
-    const [id, setId] = useState(props.match.params.id);
-
+    const { id } = useParams();
     const [status, setStatus] = useState({
         type: '',
         message: ''
     });
-    
-    const getItens = async () => {
-        total_inc = 0;
-        await axios.get(`${api}/servico/${id}/pedidos`)
-            .then((response) => {
-                console.log(response.data.item);
-                setData(response.data.item);
-                response.data.item.map(item => {
-                    setTotal(total_inc += (item.valor * item.quantidade));
-                    setTotalQuantidade(totalQuantidadeInc += item.quantidade);
-                });
-            })
-            .catch(() => {
-                setStatus({
-                    type: 'error',
-                    message: 'Erro: sem conexão com a API.',
-                });
-            })
-    }
 
     useEffect(() => {
+        const getItens = async () => {
+            await axios.get(`${api}/servico/${id}/pedidos`)
+                .then((response) => {
+                    setData(response.data.item);
+                })
+                .catch(() => {
+                    setStatus({
+                        type: 'error',
+                        message: 'Erro: sem conexão com a API.',
+                    });
+                })
+        }
         getItens();
     }, [id]);
+
+    useEffect(() => {
+        function estatisticas() {
+            data.map(item => {
+                setTotal(prev => prev += (item.valor * item.quantidade));
+                setTotalQuantidade(prev => prev += item.quantidade);
+                return false
+            });
+        }
+        estatisticas();
+    }, [data]);
 
     return (
         <div>
             <Container>
-                <div className="p-2">
-                    <div className="d-flex">
-                        <div className="p-2 m-auto">
-                            <h1>Informações do Serviço</h1>
-                        </div>
-                        <div style={{ margin: 'auto 0' }}>
-                            <Link to="/listar-servicos"
-                                className="btn btn-primary btn d-flex align-items-center">
-                                <VisibilityIcon />Listar Serviços
-                            </Link>
-                        </div>
-                    </div>
-                    {status.type === 'error' ? <Alert color="danger">{status.message}</Alert> : ''}
-                </div>
+                
+                <TituloEBotao
+                    titulo="Informações do Serviço"
+                    btnLink="/listar-servicos"
+                    btnText="Ver Serviços"
+                    btnIcon="VisibilityIcon"
+                    status={status}
+                />
+
                 <div className="mb-4">
                     <Toast className="">
                         <ToastHeader>
@@ -73,7 +70,7 @@ export const Item = (props) => {
                         </ToastBody>
                     </Toast>
                 </div>
-                <Table className="rounded" hover striped bordered>
+                <Table className="rounded" hover striped bordered responsive>
                     <thead>
                         <tr>
                             <th>Pedido Id</th>

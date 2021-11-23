@@ -1,19 +1,16 @@
 import axios from "axios";
 import { api } from '../../../config/'
 
-import { Container, Table, Alert, Button } from "reactstrap"
+import { Container, Table, Badge } from "reactstrap"
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import VisibilityIcon from '@material-ui/icons/Visibility';
-import AddIcon from '@material-ui/icons/Add';
-import EditIcon from '@material-ui/icons/Edit';
-import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import { ModalExclusao } from "../../../components/modalExclusao";
-
-
+import { BotoesDeAcao } from "../../../components/botoesDeAcao";
+import { TituloEBotao } from "../../../components/tituloEbotao";
 
 export const ListarCliente = () => {
-   
+
+    document.title = "TIAcademy | Clientes"
+
     const [dataCliente, setDataCliente] = useState([]);
 
     const [status, setStatus] = useState({
@@ -25,6 +22,13 @@ export const ListarCliente = () => {
         id: '',
         nome: ''
     });
+
+    const converterData = (dataRecebida) => {
+        let data = dataRecebida;
+        data = new Date(data);
+        let dataFormatada = data.toLocaleDateString('pt-BR', { timeZone: 'UTC' });
+        return dataFormatada
+    }
 
     const [openModal, setOpenModal] = useState(false);
 
@@ -49,26 +53,19 @@ export const ListarCliente = () => {
 
     return (
         <Container>
-            <div className="p-2">
-                <div className="d-flex">
-                    <div className="p-2 m-auto">
-                        <h1>Visualizar Clientes</h1>
-                    </div>
-
-                    <div style={{ margin: 'auto 0' }}>
-                        <Link to="/cadastrarcliente"
-                            className="btn btn-primary btn d-flex align-items-center">
-                            <AddIcon />Cadastrar Cliente
-                        </Link>
-                    </div>
-
-                </div>
-                {status.type === 'error' ? <Alert color="danger">{status.message}</Alert> : ''}
-            </div>
+            <TituloEBotao
+                titulo="Visualizar Clientes"
+                btnLink="/cadastrarcliente"
+                btnText="Cadastrar Cliente"
+                btnIcon="AddIcon"
+                status={status}
+            />
             <div className="p-2">
                 {dataCliente.length > 0 ?
                     <>
-                        <h4 className="p-2">{dataCliente.length} clientes cadastrados</h4>
+                        <Badge color="dark" pill={true} className="m-2 p-2">
+                            {dataCliente.length} clientes cadastrados
+                        </Badge>
                         <Table hover responsive striped bordered>
                             <thead>
                                 <tr>
@@ -79,39 +76,27 @@ export const ListarCliente = () => {
                                     <th>UF</th>
                                     <th>Nascimento</th>
                                     <th>Cliente desde</th>
-                                    <th className="text-center" style={{ width: '120px' }}>Ação</th>
+                                    <th className="text-center">Ação</th>
                                 </tr>
                             </thead>
                             <tbody>
 
-                                {dataCliente.map(cliente => (
+                                {dataCliente.map((cliente, index) => (
                                     <tr key={cliente.id}>
                                         <td>{cliente.id}</td>
                                         <td>{cliente.nome}</td>
                                         <td>{cliente.endereco}</td>
                                         <td>{cliente.cidade}</td>
                                         <td>{cliente.uf}</td>
-                                        <td>{cliente.nascimento}</td>
-
-                                        <td>{cliente.clienteDesde}</td>
+                                        <td>{converterData(cliente.nascimento)}</td>
+                                        <td>{converterData(cliente.clienteDesde)}</td>
                                         <td>
-                                            <div className="d-flex text-center align-middle">
-                                                <Link to={"/listapedido/" + cliente.id}>
-                                                    <Button className="btn btn-sm m-1 btn-success p-1">
-                                                        <VisibilityIcon />
-                                                    </Button>
-                                                </Link>
-
-                                                <Link to={"/atualizacliente/" + cliente.id}>
-                                                    <Button className="btn btn-sm m-1 btn-warning p-1">
-                                                        <EditIcon />
-                                                    </Button>
-                                                </Link>
-
-                                                <Button onClick={() => { setId(cliente.id); setIdItem({ id: id, nome: cliente.nome }); setOpenModal(true) }} className="btn btn-sm btn-danger m-1 p-1">
-                                                    <DeleteForeverIcon />
-                                                </Button>
-                                            </div>
+                                            <BotoesDeAcao
+                                                id={index}
+                                                linkVisualizar={"/listapedido/" + cliente.id}
+                                                linkEditar={"/atualizacliente/" + cliente.id}
+                                                btnExcluir={() => { setId(cliente.id); setIdItem({ id: id, nome: cliente.nome }); setOpenModal(true) }}
+                                            />
                                         </td>
                                     </tr>
                                 ))}

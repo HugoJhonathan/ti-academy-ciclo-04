@@ -1,13 +1,15 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import { Alert, Button, Container, Form, FormGroup, Input, Label } from "reactstrap";
+import { useParams } from "react-router-dom";
+import { Button, Container, Form, FormGroup, Input, Label } from "reactstrap";
 import { api } from "../../../config";
-import VisibilityIcon from '@material-ui/icons/Visibility';
+import { TituloEBotao } from "../../../components/tituloEbotao";
 
 export const EditarProduto = (props) => {
 
-    const [id, setId] = useState(props.match.params.id);
+    document.title = "Produto | Editar Produto"
+
+    let { id } = useParams();
 
     const [data, setData] = useState([]);
 
@@ -59,28 +61,21 @@ export const EditarProduto = (props) => {
             })
     }
 
-    useEffect(() => {
-        getServico();
 
-    }, [id]);
+     useEffect(() => {
+         getServico();
+     }, [id]);
 
     return (
         <Container>
-            <div className="p-2">
-                <div className="d-flex">
-                    <div className="p-2 m-auto">
-                        <h1>Editar Produto</h1>
-                    </div>
-                    <div style={{ margin: 'auto 0' }}>
-                        <Link to="/listar-produtos"
-                            className="btn btn-primary btn d-flex align-items-center">
-                            <VisibilityIcon style={{marginRight:"8px"}} />Ver Produtos
-                        </Link>
-                    </div>
-                </div>
-                {status.type === 'error' ? <Alert color="danger">{status.message}</Alert> : ''}
-                {status.type === 'success' ? <Alert color="success">{status.message}</Alert> : ''}
-            </div>
+           
+            <TituloEBotao
+                titulo="Editar Produto"
+                btnLink="/listar-produtos"
+                btnText="Ver Produtos"
+                btnIcon="VisibilityIcon"
+                status={status}
+            />
 
             <Form onSubmit={attServico}>
                 <FormGroup className="p-2">
@@ -110,13 +105,9 @@ export const EditarProduto = (props) => {
                         required
                     />
                 </FormGroup>
-                <div className="d-flex justify-content-between p-2">
-                    <Button type="reset" outline color="danger">
-                        Resetar
-                    </Button>
-                    <Button type="submit" color="success">
-                        Atualizar
-                    </Button>
+                 <div className="d-flex justify-content-between flex-row-reverse p-2">
+                    <Button type="submit" color="success">Atualizar</Button>
+                    <Button type="reset" outline color="danger">Resetar</Button>
                 </div>
             </Form>
         </Container>

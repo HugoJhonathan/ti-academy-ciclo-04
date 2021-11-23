@@ -1,15 +1,18 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import { Alert, Button, Col, Container, Form, FormGroup, Input, Label, Row } from "reactstrap";
+import { useParams } from "react-router-dom";
+import { Button, Col, Container, Form, FormGroup, Input, Label, Row } from "reactstrap";
 import { api } from "../../../config";
-import VisibilityIcon from '@material-ui/icons/Visibility';
 import AddIcon from '@material-ui/icons/Add';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import { ModalExclusao } from "../../../components/modalExclusao";
+import { TituloEBotao } from "../../../components/tituloEbotao";
 
 export const EditarCompra = (props) => {
-    const [id, setId] = useState(props.match.params.id);
+
+    document.title = "Compra | Editar"
+
+   let { id } = useParams();
 
     const [data, setData] = useState({
         data:""
@@ -173,31 +176,21 @@ export const EditarCompra = (props) => {
             })
     }
 
-    useEffect(() => {
-        getServico();
-        getItensServico();
-
-    }, [id]);
+     useEffect(() => {
+         getServico();
+         getItensServico();
+     }, [id]);
 
     return (
         <Container>
-            <div className="p-2">
-                <div className="d-flex">
-                    <div className="p-2 m-auto">
-                        <h1>Editar Compra #{id} </h1>
-                    </div>
-
-                    <div style={{ margin: 'auto 0' }}>
-                        <Link to="/listar-compras"
-                            className="btn btn-primary btn d-flex align-items-center">
-                            <VisibilityIcon style={{ marginRight: "8px" }} />Ver Compras
-                        </Link>
-                    </div>
-
-                </div>
-                {status.type === 'error' ? <Alert color="danger">{status.message}</Alert> : ''}
-                {status.type === 'success' ? <Alert color="success">{status.message}</Alert> : ''}
-            </div>
+            
+            <TituloEBotao
+                titulo={"Editar Compra # " + id}
+                btnLink="/listar-compras"
+                btnText="Ver Compras"
+                btnIcon="VisibilityIcon"
+                status={status}
+            />
 
             <Form onSubmit={attServico}>
                 
@@ -311,8 +304,8 @@ export const EditarCompra = (props) => {
                                 />
                             </Col>
                             <Col className="d-flex justify-content-left align-items-end" xs lg="2">
-                                {inputList.length !== 1 &&
-                                    <Button value="Remover" className="btn btn-sm btn-success p-1"
+                                {itensParaAdicionar &&
+                                    <Button value="Remover" className="btn btn-sm btn-secondary p-1 m-1"
                                         onClick={() => handleRemoveInput(i)}>
                                         <DeleteForeverIcon />
                                     </Button>

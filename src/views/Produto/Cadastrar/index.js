@@ -1,11 +1,12 @@
 import axios from "axios";
 import { useState } from "react";
-import { Link } from "react-router-dom";
-import { Alert, Button, Container, Form, FormGroup, Input, Label } from "reactstrap";
+import { Button, Container, Form, FormGroup, Input, Label } from "reactstrap";
 import { api } from "../../../config";
-import VisibilityIcon from '@material-ui/icons/Visibility';
+import { TituloEBotao } from "../../../components/tituloEbotao";
 
 export const CadastrarProduto = () => {
+
+    document.title = "Produto | Novo Produto"
 
     const [servico, setServico] = useState({
         nome: "",
@@ -29,6 +30,7 @@ export const CadastrarProduto = () => {
 
         await axios.post(api + '/produtos', servico, { headers })
             .then((response) => {
+
                 if (response.data.error) {
                     setStatus({
                         type: 'error',
@@ -50,21 +52,15 @@ export const CadastrarProduto = () => {
     }
     return (
         <Container>
-            <div className="p-2">
-                <div className="d-flex">
-                    <div className="p-2 m-auto">
-                        <h1>Novo Produto</h1>
-                    </div>
-                    <div style={{ margin: 'auto 0' }}>
-                        <Link to="/listar-produtos"
-                            className="btn btn-primary btn d-flex align-items-center">
-                            <VisibilityIcon style={{marginRight:"8px"}} />Ver Produtos
-                        </Link>
-                    </div>
-                </div>
-                {status.type === 'error' ? <Alert color="danger">{status.message}</Alert> : ''}
-                {status.type === 'success' ? <Alert color="success">{status.message}</Alert> : ''}
-            </div>
+            
+            <TituloEBotao
+                titulo="Novo Produto"
+                btnLink="/listar-produtos"
+                btnText="Ver Produtos"
+                btnIcon="VisibilityIcon"
+                status={status}
+            />
+
             <Form onSubmit={cadServico}>
                 <FormGroup className="p-2">
                     <Label>
@@ -91,13 +87,9 @@ export const CadastrarProduto = () => {
                         required
                     />
                 </FormGroup>
-                <div className="d-flex justify-content-between p-2">
-                    <Button type="reset" outline color="danger">
-                        Limpar
-                    </Button>
-                    <Button type="submit" color="success">
-                        Cadastrar
-                    </Button>
+                 <div className="d-flex justify-content-between flex-row-reverse p-2">
+                    <Button type="submit" color="success">Cadastrar</Button>
+                    <Button type="reset" outline color="danger">Limpar</Button>
                 </div>
             </Form>
         </Container>

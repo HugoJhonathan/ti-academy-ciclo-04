@@ -1,9 +1,12 @@
-import { Link } from "react-router-dom";
-import { Alert, Button, Container, Table } from "reactstrap";
-import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
+
+import { Alert, Container, Table } from "reactstrap";
 
 export const ServicosDaCompra = (props) => {
     let totalPedido = 0;
+    const somaTotalPedido = (valor) => {
+        totalPedido += Number(valor);
+    }
+
     const data = props.servicos;
 
     if (data.length < 1) {
@@ -20,7 +23,7 @@ export const ServicosDaCompra = (props) => {
 
 
     return (
-        <Table className="mb-0" hover striped bordered>
+        <Table className="mb-0" hover striped bordered responsive>
             <thead>
                 <tr>
                     <th style={{ width: "80px" }}>Qtd.</th>
@@ -32,13 +35,12 @@ export const ServicosDaCompra = (props) => {
             <tbody>
 
                 {data.map(item => (
-                    totalPedido += Number(item.ItemCompra.valor * item.ItemCompra.quantidade),
-
                     <tr key={item.id}>
                         <td>{item.ItemCompra.quantidade}</td>
-                        <td>{item.nome}</td>
+                        <td>{item.nome}234234</td>
                         <td>{item.descricao}</td>
                         <td>{item.ItemCompra.valor.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</td>
+                        {somaTotalPedido(Number(item.ItemCompra.valor * item.ItemCompra.quantidade))}
                     </tr>
                 ))}
 

@@ -20,7 +20,7 @@ export const ServicosDoPedido = (props) => {
 
 
     return (
-        <Table className="mb-0" hover striped bordered>
+        <Table className="mb-0" hover striped bordered responsive>
             <thead>
                 <tr>
                     <th style={{ width: "80px" }}>Qtd.</th>

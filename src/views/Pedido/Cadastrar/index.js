@@ -1,27 +1,35 @@
 import axios from "axios";
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import { Alert, Button, Col, Container, Form, FormGroup, Input, Label, Row } from "reactstrap";
+import { Button, Col, Container, Form, FormGroup, Input, Label, Row } from "reactstrap";
 import { api } from "../../../config";
-import VisibilityIcon from '@material-ui/icons/Visibility';
 import AddIcon from '@material-ui/icons/Add';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
+import { TituloEBotao } from "../../../components/tituloEbotao";
 
-export const CadastrarPedido = () => {
+export const CadastrarPedido = (req) => {
 
-    const [pedido, setPedido] = useState({
-        data: "",
-        nome: ""
-    });
+    document.title = "Pedido | Novo Pedido"
+
+    let day = new Date().toLocaleDateString("en-CA", { year: "numeric", month: "2-digit", day: "2-digit" }).replace('/', '-');
 
     const [status, setStatus] = useState({
         type: "",
         message: ""
     });
 
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const cliente = 1
+    // urlParams.get('cliente')
+    const [pedido, setPedido] = useState({
+        nome: cliente,
+        data: day
+    });
+
     const valorInputPedido = e => setPedido({
         ...pedido, [e.target.name]: e.target.value
     });
+
 
     const cadServico = async e => {
         e.preventDefault();
@@ -42,9 +50,11 @@ export const CadastrarPedido = () => {
                         type: 'success',
                         message: 'Pedido criado com sucesso!'
                     });
+                    
                     listaItemPedido.forEach(function (item, index) {
                         CadItemPedido(response.data.order.id, item, index);
                     });
+                    
                 }
             }).catch(() => {
                 setStatus({
@@ -57,7 +67,7 @@ export const CadastrarPedido = () => {
 
 
     const [listaItemPedido, setListaItemPedido] = useState([
-        { ServicoId: '', quantidade: '', valor: '' }
+        { ServicoId: '1', quantidade: '1', valor: '1' }
     ]);
 
     const valorInputItemPedido = (e, index) => {
@@ -68,7 +78,7 @@ export const CadastrarPedido = () => {
     }
 
     const adicionarItemPedido = () => {
-        setListaItemPedido([...listaItemPedido, { ServicoId: '', quantidade: '', valor: '' }]);
+        setListaItemPedido([...listaItemPedido, { ServicoId: '2', quantidade: '2', valor: '2' }]);
     }
 
     const btnRemoverItem = (index) => {
@@ -77,10 +87,11 @@ export const CadastrarPedido = () => {
         setListaItemPedido(list);
     }
 
-    const CadItemPedido = async (id, item, index) => {
+    const CadItemPedido = async (id, item) => {
         const headers = {
             'Content-Type': 'application/json'
         }
+        console.log(item);
         await axios.post(api + '/itempedido/' + id, item, { headers })
             .then((response) => {
                 if (response.data.error) {
@@ -89,53 +100,54 @@ export const CadastrarPedido = () => {
                         message: response.data.message
                     });
                 } else {
-                    document.getElementById(index).style.display = 'none'
+                    // document.getElementById(index).style.display = 'none'
                 }
+                document.getElementById("formulario").reset();
             }).catch(() => {
                 alert("ERRO: Conexão com API ou Serviço inserido duas vezes");
-                document.getElementById(index).style.border = '1px solid red';
+                // document.getElementById(index).style.border = '1px solid red';
                 console.log("update: Sem conexão com API");
             })
     }
 
     return (
         <Container>
-            <div className="p-2">
-                <div className="d-flex">
-                    <div className="p-2 m-auto">
-                        <h1>Novo Pedido</h1>
-                    </div>
-                    <div style={{ margin: 'auto 0' }}>
-                        <Link to="/listar-pedido"
-                            className="btn btn-primary btn d-flex align-items-center">
-                            <VisibilityIcon style={{ marginRight: "8px" }} />Ver Pedidos
-                        </Link>
-                    </div>
-                </div>
-                {status.type === 'error' ? <Alert color="danger">{status.message}</Alert> : ''}
-                {status.type === 'success' ? <Alert color="success">{status.message}</Alert> : ''}
-            </div>
+
+            <TituloEBotao
+                titulo="Novo Pedido"
+                btnLink="/listar-pedido"
+                btnText="Ver Pedidos"
+                btnIcon="VisibilityIcon"
+                status={status}
+            />
 
             <Form onSubmit={cadServico} id="formulario">
-                <FormGroup className="p-2">
-                    <Label>
-                        Data
-                    </Label>
-                    <Input type="date" name="data" onChange={valorInputPedido} autoFocus required>
-
-                    </Input>
-                    <Label>
-                        ClienteId
-                    </Label>
-                    <Input type="number" name="nome" onChange={valorInputPedido} required>
-                    </Input>
-                </FormGroup>
+                <Row>
+                    <Col>
+                        <FormGroup className="p-2">
+                            <Label>
+                                Data
+                            </Label>
+                            <Input type="date" name="data" defaultValue={day} onChange={valorInputPedido} required>
+                            </Input>
+                        </FormGroup>
+                    </Col>
+                    <Col>
+                    <FormGroup className="p-2">
+                        <Label>
+                            ClienteId
+                        </Label>
+                        <Input type="number" name="nome" defaultValue={cliente} autoFocus onChange={valorInputPedido} required>
+                        </Input>
+                    </FormGroup>
+                    </Col>
+                </Row>
                 {listaItemPedido.map((item, i) => {
                     return (
                         <div>
                             <FormGroup id={i} key={i} className="p-2">
                                 <Row>
-                                    <Col xs lg="2">
+                                    <Col lg="3">
                                         <Label>
                                             ServiçoId
                                         </Label>
@@ -148,7 +160,7 @@ export const CadastrarPedido = () => {
                                             onChange={e => valorInputItemPedido(e, i)}
                                         />
                                     </Col>
-                                    <Col xs lg="2">
+                                    <Col lg="3">
                                         <Label>
                                             Quantidade
                                         </Label>
@@ -174,7 +186,7 @@ export const CadastrarPedido = () => {
                                             onChange={e => valorInputItemPedido(e, i)}
                                         />
                                     </Col>
-                                    <Col className="d-flex justify-content-left align-items-end" xs lg="2">
+                                    <Col className="d-flex justify-content-left align-items-end">
                                         {listaItemPedido.length !== 1 &&
                                             <Button value="Remover" className="btn btn-sm btn-danger p-1"
                                                 onClick={() => btnRemoverItem(i)}>

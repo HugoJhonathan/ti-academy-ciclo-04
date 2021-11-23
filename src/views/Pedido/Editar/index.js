@@ -1,15 +1,18 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import { Alert, Button, Col, Container, Form, FormGroup, Input, Label, Row } from "reactstrap";
+import { useParams } from "react-router-dom";
+import { Button, Col, Container, Form, FormGroup, Input, Label, Row } from "reactstrap";
 import { api } from "../../../config";
-import VisibilityIcon from '@material-ui/icons/Visibility';
 import AddIcon from '@material-ui/icons/Add';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import { ModalExclusao } from "../../../components/modalExclusao";
+import { TituloEBotao } from "../../../components/tituloEbotao";
 
 export const EditarPedido = (props) => {
-    const [id, setId] = useState(props.match.params.id);
+
+    document.title = "Pedido | Editar Pedido"
+
+    let { id } = useParams();
 
     const [data, setData] = useState([]);
 
@@ -69,6 +72,7 @@ export const EditarPedido = (props) => {
                 });
             })
     }
+    
     const getItensServico = async () => {
         await axios.get(api + '/pedido/' + id + '/servicos/')
             .then((response) => {
@@ -173,30 +177,20 @@ export const EditarPedido = (props) => {
     }
 
     useEffect(() => {
-        getServico();
         getItensServico();
-
+        getServico();
     }, [id]);
 
     return (
         <Container>
-            <div className="p-2">
-                <div className="d-flex">
-                    <div className="p-2 m-auto">
-                        <h1>Editar Pedido #{id} </h1>
-                    </div>
 
-                    <div style={{ margin: 'auto 0' }}>
-                        <Link to="/listar-pedido"
-                            className="btn btn-primary btn d-flex align-items-center">
-                            <VisibilityIcon style={{ marginRight: "8px" }} />Ver Pedidos
-                        </Link>
-                    </div>
-
-                </div>
-                {status.type === 'error' ? <Alert color="danger">{status.message}</Alert> : ''}
-                {status.type === 'success' ? <Alert color="success">{status.message}</Alert> : ''}
-            </div>
+            <TituloEBotao
+                titulo={"Editar Pedido "+ id}
+                btnLink="/listar-pedido"
+                btnText="Ver Pedidos"
+                btnIcon="VisibilityIcon"
+                status={status}
+            />
 
             <Form onSubmit={attServico}>
                 <FormGroup className="p-2">
@@ -308,8 +302,8 @@ export const EditarPedido = (props) => {
                                 />
                             </Col>
                             <Col className="d-flex justify-content-left align-items-end" xs lg="2">
-                                {inputList.length !== 1 &&
-                                    <Button value="Remover" className="btn btn-sm btn-success p-1"
+                                {itensParaAdicionar &&
+                                    <Button value="Remover" className="btn btn-sm btn-success secondary p-1 m-1"
                                         onClick={() => handleRemoveInput(i)}>
                                         <DeleteForeverIcon />
                                     </Button>

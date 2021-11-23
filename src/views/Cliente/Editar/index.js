@@ -1,12 +1,14 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import { Alert, Button, Container, Form, FormGroup, Input, Label } from "reactstrap";
+import { useParams } from "react-router-dom";
+import { Button, Container, Form, FormGroup, Input, Label } from "reactstrap";
 import { api } from "../../../config";
-import VisibilityIcon from '@material-ui/icons/Visibility';
+import { TituloEBotao } from "../../../components/tituloEbotao";
 
 export const EditarCliente = (props) => {
-    const [id, setId] = useState(props.match.params.id);
+    document.title = "Cliente | Editar"
+
+    let { id } = useParams();
     const [data, setData] = useState([]);
     const [status, setStatus] = useState({
         type: "",
@@ -52,33 +54,25 @@ export const EditarCliente = (props) => {
                 }
             }).catch(() => {
                 console.log("Sem conexão com API");
+            }).finally(() => {
+                window.scrollTo(0, 0);
             })
     }
-
-    useEffect(() => {
-        getCliente();
-
-    }, [id]);
+    
+     useEffect(() => {
+         getCliente();
+     }, [id]);
 
     return (
         <Container>
-            <div className="p-2">
-                <div className="d-flex">
-                    <div className="p-2 m-auto">
-                        <h1>Editar Cliente</h1>
-                    </div>
-
-                    <div style={{ margin: 'auto 0' }}>
-                        <Link to="/listar-cliente"
-                            className="btn btn-primary btn d-flex align-items-center">
-                            <VisibilityIcon style={{ marginRight: "8px" }} />Ver Clientes
-                        </Link>
-                    </div>
-
-                </div>
-                {status.type === 'error' ? <Alert color="danger">{status.message}</Alert> : ''}
-                {status.type === 'success' ? <Alert color="success">{status.message}</Alert> : ''}
-            </div>
+           
+            <TituloEBotao
+                titulo="Editar Cliente"
+                btnLink="/listar-cliente"
+                btnText="Ver Clientes"
+                btnIcon="VisibilityIcon"
+                status={status}
+            />
 
             <Form onSubmit={attCliente}>
                 <FormGroup className="p-2">
@@ -146,13 +140,9 @@ export const EditarCliente = (props) => {
                         onChange={valorInput}
                     />
                 </FormGroup>
-                <div className="d-flex justify-content-between p-2">
-                    <Button type="reset" outline color="danger">
-                        Resetar
-                    </Button>
-                    <Button type="submit" color="success">
-                        Atualizar
-                    </Button>
+                <div className="d-flex justify-content-between flex-row-reverse p-2">
+                    <Button type="submit" color="success">Atualizar</Button>
+                    <Button type="reset" outline color="danger">Limpar</Button>
                 </div>
             </Form>
         </Container>

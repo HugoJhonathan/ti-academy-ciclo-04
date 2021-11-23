@@ -1,26 +1,34 @@
 import axios from "axios";
 import { api } from '../../../config/'
 
-import { Container, Table, Alert, Button } from "reactstrap"
+import { Container, Table, Button } from "reactstrap"
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import { ModalExclusao } from "../../../components/modalExclusao";
-import EditIcon from '@material-ui/icons/Edit';
+import { TituloEBotao } from "../../../components/tituloEbotao";
+
 
 export const VerPedido = (props) => {
+
+    let { id } = useParams();
+
+    document.title = "Pedidos | Pedido #" + id
 
     const [openModal, setOpenModal] = useState(false);
 
     let totalPedido = 0;
+    const somaTotalPedido = (valor) => {
+        totalPedido += Number(valor);
+    }
 
     const [data, setData] = useState({
-        clientes: {nome: ''},
+        clientes: { nome: '' },
     });
-    
+
     console.log(data.clientes.nome);
-    
-    const [id, setId] = useState(props.match.params.id);
+
+
 
     const [idItem, setIdItem] = useState({});
 
@@ -30,11 +38,12 @@ export const VerPedido = (props) => {
     });
 
     const getItens = async () => {
+
         await axios.get(`${api}/pedido/${id}`)
             .then((response) => {
-
+                console.log(response.data.ped)
                 setData(response.data.ped);
-
+                console.log('data', response.data.ped);
             })
             .catch(() => {
                 setStatus({
@@ -48,29 +57,24 @@ export const VerPedido = (props) => {
         getItens();
     }, [id]);
 
+
     return (
         <div>
             <Container>
-                <div className="p-2">
-                    <div className="d-flex">
-                        <div className="p-2 m-auto">
-                            <h1>Pedido #{id}</h1>
-                            <h3>{data.clientes.nome}</h3>
-                        </div>
 
-                        <div style={{ margin: 'auto 0' }}>
-                            <Link to={"/atualizapedido/" + id}
-                                className="btn btn-dark btn d-flex align-items-center">
-                                <EditIcon />Editar Pedido
-                            </Link>
-                        </div>
+                <TituloEBotao
+                    titulo={`Pedido #${id} - ${data.clientes.nome}`}
+                    btnLink={"/atualizapedido/" + id}
+                    btnText="Editar Pedido"
+                    btnIcon="EditIcon"
+                    status={status}
+                />
 
-                    </div>
-                    {status.type === 'error' ? <Alert color="danger">{status.message}</Alert> : ''}
-                </div>
+                
+
                 {data.clientes.nome !== '' ?
                     <>
-                        <Table className="mb-0" hover striped bordered>
+                        <Table className="mb-0" hover striped bordered responsive>
                             <thead>
                                 <tr>
                                     <th>Data</th>
@@ -78,13 +82,11 @@ export const VerPedido = (props) => {
                                     <th>Serviço</th>
                                     <th>Descrição</th>
                                     <th>Valor</th>
-
                                 </tr>
                             </thead>
                             <tbody>
                                 {
                                     data.item_pedidos.map((item, index) => (
-                                        totalPedido += Number(data.item_pedidos[index].valor * data.item_pedidos[index].quantidade),
                                         <tr key={data.servicos_ped[index].ServicoId}>
                                             <td>{data.data}</td>
                                             <td>{data.item_pedidos[index].quantidade}</td>
@@ -95,6 +97,7 @@ export const VerPedido = (props) => {
                                                     { style: 'currency', currency: 'BRL' })
                                                 }
                                             </td>
+                                            {somaTotalPedido(Number(data.item_pedidos[index].valor * data.item_pedidos[index].quantidade))}
                                         </tr>
                                     ))
                                 }
@@ -105,13 +108,17 @@ export const VerPedido = (props) => {
                                 </tr>
                             </tfoot>
                         </Table>
-
-                        <Button onClick={() => { setIdItem({ id: id, nome: "Pedido #" + id }); setOpenModal(true) }} className="btn btn-sm btn-danger mt-2 p-1 d-flex align-items-center">
+                        <Button
+                            onClick={() => {
+                                setIdItem({ id: id, nome: "Pedido #" + id });
+                                setOpenModal(true)
+                            }}
+                            className="btn btn-sm btn-danger mt-2 p-1 d-flex align-items-center">
                             <DeleteForeverIcon /> Deletar Pedido
                         </Button>
                     </>
                     : ''}
-                {openModal && <ModalExclusao url={'/excluirpedido/' + id} item={idItem} itemDeletar="key" atualizar={() => getItens()} closeModal={setOpenModal} />}
+                {openModal && <ModalExclusao url={'/excluirpedido/' + id} item={idItem} itemDeletar="key" atualizar={() => window.location = '/listar-pedido'} closeModal={setOpenModal} />}
 
             </Container>
         </div>

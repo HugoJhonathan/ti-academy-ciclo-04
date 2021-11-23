@@ -1,26 +1,33 @@
 import axios from "axios";
 import { api } from '../../../config/'
 
-import { Container, Table, Alert, Button } from "reactstrap"
+import { Container, Table, Button } from "reactstrap"
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import { ModalExclusao } from "../../../components/modalExclusao";
-import EditIcon from '@material-ui/icons/Edit';
+import { TituloEBotao } from "../../../components/tituloEbotao";
 
 export const VerCompra = (props) => {
+    
+    let { id } = useParams();
+    
+    document.title = "Compras | Compra #"+id
 
     const [openModal, setOpenModal] = useState(false);
 
     let totalPedido = 0;
+    const somaTotalPedido = (valor) => {
+        totalPedido += Number(valor);
+    }
 
     const [data, setData] = useState({
-        clientes: {nome: ''},
+        clientes: { nome: '' },
     });
-    
+
     console.log(data.clientes.nome);
+
     
-    const [id, setId] = useState(props.match.params.id);
 
     const [idItem, setIdItem] = useState({});
 
@@ -32,7 +39,7 @@ export const VerCompra = (props) => {
     const getItens = async () => {
         await axios.get(`${api}/compra/${id}`)
             .then((response) => {
-                
+
                 setData(response.data.ped);
 
             })
@@ -51,26 +58,18 @@ export const VerCompra = (props) => {
     return (
         <div>
             <Container>
-                <div className="p-2">
-                    <div className="d-flex">
-                        <div className="p-2 m-auto">
-                            <h1>Compra #{id}</h1>
-                            <h3>{data.clientes.nome}</h3>
-                        </div>
+                
+                <TituloEBotao
+                    titulo={`Pedido #${id} - ${data.clientes.nome}`}
+                    btnLink={"/atualizacompra/" + id}
+                    btnText="Editar Compra"
+                    btnIcon="EditIcon"
+                    status={status}
+                />
 
-                        <div style={{ margin: 'auto 0' }}>
-                            <Link to={"/atualizacompra/" + id}
-                                className="btn btn-dark btn d-flex align-items-center">
-                                <EditIcon />Editar Compra
-                            </Link>
-                        </div>
-
-                    </div>
-                    {status.type === 'error' ? <Alert color="danger">{status.message}</Alert> : ''}
-                </div>
                 {data.clientes.nome !== '' ?
                     <>
-                        <Table className="mb-0" hover striped bordered>
+                        <Table className="mb-0" hover striped bordered responsive>
                             <thead>
                                 <tr>
                                     <th>Data</th>
@@ -84,7 +83,6 @@ export const VerCompra = (props) => {
                             <tbody>
                                 {
                                     data.item_compra.map((item, index) => (
-                                        totalPedido += Number(data.item_compra[index].valor * data.item_compra[index].quantidade),
                                         <tr key={data.produtos_comp[index].ServicoId}>
                                             <td>{data.data}</td>
                                             <td>{data.item_compra[index].quantidade}</td>
@@ -95,6 +93,7 @@ export const VerCompra = (props) => {
                                                     { style: 'currency', currency: 'BRL' })
                                                 }
                                             </td>
+                                            {somaTotalPedido(Number(data.item_compra[index].valor * data.item_compra[index].quantidade))}
                                         </tr>
                                     ))
                                 }
@@ -111,7 +110,7 @@ export const VerCompra = (props) => {
                         </Button>
                     </>
                     : ''}
-                {openModal && <ModalExclusao url={'/excluircompra/' + id} item={idItem} itemDeletar="key" atualizar={() => getItens()} closeModal={setOpenModal} />}
+                {openModal && <ModalExclusao url={'/excluircompra/' + id} item={idItem} itemDeletar="key" atualizar={() => window.location = '/listar-pedido'} closeModal={setOpenModal} />}
 
             </Container>
         </div>

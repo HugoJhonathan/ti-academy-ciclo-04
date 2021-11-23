@@ -1,79 +1,77 @@
 import axios from "axios";
 import { api } from '../../../config'
-import { Container, Table, Alert, Toast, ToastHeader, ToastBody, Button } from "reactstrap"
+import { Container, Table, Toast, ToastHeader, ToastBody, Button } from "reactstrap"
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import VisibilityIcon from '@material-ui/icons/Visibility';
+import { TituloEBotao } from "../../../components/tituloEbotao";
 
 export const ItemProduto = (props) => {
 
+    document.title = "Produto | Informações"
+
     const [data, setData] = useState([]);
     const [total, setTotal] = useState(0);
-    let total_inc = total;
-
     const [totalQuantidade, setTotalQuantidade] = useState(0);
-    let totalQuantidadeInc = totalQuantidade;
-
-    const [id, setId] = useState(props.match.params.id);
-
+    let { id } = useParams();
     const [status, setStatus] = useState({
         type: '',
         message: ''
     });
-    
-    const getItens = async () => {
-        total_inc = 0;
-        await axios.get(`${api}/produto/${id}/compras`)
-            .then((response) => {
-                console.log(response.data.item);
-                setData(response.data.item);
-                response.data.item.map(item => {
-                    setTotal(total_inc += (item.valor * item.quantidade));
-                    setTotalQuantidade(totalQuantidadeInc += item.quantidade);
-                });
-            })
-            .catch(() => {
-                setStatus({
-                    type: 'error',
-                    message: 'Erro: sem conexão com a API.',
-                });
-            })
-    }
 
     useEffect(() => {
+        const getItens = async () => {
+            await axios.get(`${api}/produto/${id}/compras`)
+                .then((response) => {
+                    console.log(response.data.item);
+                    setData(response.data.item);
+                })
+                .catch(() => {
+                    setStatus({
+                        type: 'error',
+                        message: 'Erro: sem conexão com a API.',
+                    });
+                })
+        }
         getItens();
     }, [id]);
+
+    useEffect(() => {
+        function estatisticas() {
+            data.map(item => {
+                setTotal(prev => prev += (item.valor * item.quantidade));
+                setTotalQuantidade(prev => prev += item.quantidade);
+                return false
+            });
+        }
+        estatisticas();
+    }, [data]);
 
     return (
         <div>
             <Container>
-                <div className="p-2">
-                    <div className="d-flex">
-                        <div className="p-2 m-auto">
-                            <h1>Informações do Produto</h1>
-                        </div>
-                        <div style={{ margin: 'auto 0' }}>
-                            <Link to="/listar-produtos"
-                                className="btn btn-primary btn d-flex align-items-center">
-                                <VisibilityIcon />Listar Produtos
-                            </Link>
-                        </div>
-                    </div>
-                    {status.type === 'error' ? <Alert color="danger">{status.message}</Alert> : ''}
-                </div>
+            
+                <TituloEBotao
+                    titulo="Informações do Produto"
+                    btnLink="/listar-produtos"
+                    btnText="Ver Produtos"
+                    btnIcon="VisibilityIcon"
+                    status={status}
+                />
+
                 <div className="mb-4">
                     <Toast className="">
                         <ToastHeader>
                             Estatísticas
                         </ToastHeader>
                         <ToastBody>
-                            <p>Este produto apareceu em <strong>{data.length} pedidos.</strong></p>
+                            <p>Este produto apareceu em <strong>{data.length} compras.</strong></p>
                             <p>Vendido <strong>{totalQuantidade} vezes.</strong></p>
                             <p>Com total de faturamento de <strong>{total.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}.</strong></p>
                         </ToastBody>
                     </Toast>
                 </div>
-                <Table className="rounded" hover striped bordered>
+                <Table className="rounded" hover striped bordered responsive>
                     <thead>
                         <tr>
                             <th>Pedido Id</th>
@@ -93,9 +91,9 @@ export const ItemProduto = (props) => {
                                 <td>{item.quantidade}</td>
                                 <td>{item.valor.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })}</td>
                                 <td className="text-center/">
-                                    <Link to={"/ver-pedido/" + item.CompraId}>
+                                    <Link to={"/ver-compra/" + item.CompraId}>
                                         <Button className="btn btn-sm m-1 btn-success p-1">
-                                            <VisibilityIcon />Ver pedido
+                                            <VisibilityIcon />Ver compra
                                         </Button>
                                     </Link>
                                 </td>

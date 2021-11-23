@@ -1,17 +1,16 @@
 import axios from "axios";
 import { api } from '../../../config/'
 
-import { Container, Table, Alert, Button } from "reactstrap"
+import { Container, Table } from "reactstrap"
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import VisibilityIcon from '@material-ui/icons/Visibility';
-import AddIcon from '@material-ui/icons/Add';
-import EditIcon from '@material-ui/icons/Edit';
-import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import { ModalExclusao } from "../../../components/modalExclusao";
+import { BotoesDeAcao } from "../../../components/botoesDeAcao";
+import { TituloEBotao } from "../../../components/tituloEbotao";
 
 export const ListarProduto = () => {
-    //   dados obtidos
+
+    document.title = "TIAcademy | Produtos"
+
     const [data, setData] = useState([]);
 
     const [status, setStatus] = useState({
@@ -25,6 +24,7 @@ export const ListarProduto = () => {
     });
 
     const [openModal, setOpenModal] = useState(false);
+    
     const [id, setId] = useState();
 
     const getServicos = async () => {
@@ -48,72 +48,49 @@ export const ListarProduto = () => {
     return (
 
         <Container>
-            <div className="p-2">
-                <div className="d-flex">
-                    <div className="p-2 m-auto">
-                        <h1>Visualizar Produtos</h1>
-                    </div>
 
-                    <div style={{ margin: 'auto 0' }}>
-                        <Link to="/cadastrarproduto"
-                            className="btn btn-primary btn d-flex align-items-center">
-                            <AddIcon />Cadastrar Produto
-                        </Link>
-                    </div>
+            <TituloEBotao
+                titulo="Visualizar Produtos"
+                btnLink="/cadastrarproduto"
+                btnText="Cadastrar Produto"
+                btnIcon="AddIcon"
+                status={status}
+            />
 
-                </div>
-                {status.type === 'error' ? <Alert color="danger">
-                    {status.message}
-                </Alert> : ''}
-            </div>
             <div className="p-2">
                 {data.length > 0 ?
-                <Table hover striped bordered>
+                    <Table hover striped bordered responsive>
 
-                    <thead>
-                        <tr>
-                            <th >ID</th>
-                            <th>Nome</th>
-                            <th>Descrição</th>
-                            <th className="text-center" style={{ width: '120px' }}>Ação</th>
-                        </tr>
-                    </thead>
-                    <tbody style={{ borderTop: 'none' }}>
-
-                        {data.map(item => (
-                            <tr key={item.id}>
-                                <td>{item.id}</td>
-                                <td>{item.nome}</td>
-                                <td>{item.descricao}</td>
-                                <td className="d-flex text-center">
-                                    <div className="d-flex text-center align-middle">
-                                        <Link to={"/listar-produto/" + item.id}>
-                                            <Button className="btn btn-sm m-1 btn-success p-1">
-                                                <VisibilityIcon />
-                                            </Button>
-                                        </Link>
-
-                                        <Link to={"/atualizaproduto/" + item.id}>
-                                            <Button className="btn btn-sm m-1 btn-warning p-1">
-                                                <EditIcon />
-                                            </Button>
-                                        </Link>
-
-
-                                        <Button onClick={() => { setId(item.id); setIdItem({ id: id, nome: item.nome }); setOpenModal(true) }} className="btn btn-sm btn-danger m-1 p-1">
-                                            <DeleteForeverIcon />
-                                        </Button>
-                                    </div>
-                                </td>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nome</th>
+                                <th>Descrição</th>
+                                <th className="text-center">Ação</th>
                             </tr>
-                        ))}
+                        </thead>
+                        <tbody style={{ borderTop: 'none' }}>
 
-                    </tbody>
-                </Table> : ""}
+                            {data.map((item, index) => (
+                                <tr key={item.id}>
+                                    <td>{item.id}</td>
+                                    <td>{item.nome}</td>
+                                    <td>{item.descricao}</td>
+                                    <td className="d-flex text-center">
+                                        <BotoesDeAcao
+                                            id={index}
+                                            linkVisualizar={"/listar-produto/" + item.id}
+                                            linkEditar={"/atualizaproduto/" + item.id}
+                                            btnExcluir={() => { setId(item.id); setIdItem({ id: id, nome: item.nome }); setOpenModal(true) }}
+                                        />
+                                    </td>
+                                </tr>
+                            ))}
+
+                        </tbody>
+                    </Table> : ""}
             </div>
             {openModal && <ModalExclusao url={'/excluirproduto/' + id} item={idItem} itemDeletar="key" atualizar={() => getServicos()} closeModal={setOpenModal} />}
         </Container>
-
-
     )
 }
