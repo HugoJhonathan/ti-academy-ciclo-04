@@ -64,10 +64,8 @@ export const CadastrarPedido = (req) => {
             });
     }
 
-
-
     const [listaItemPedido, setListaItemPedido] = useState([
-        { ServicoId: '1', quantidade: '1', valor: '1' }
+        { ServicoId: '', quantidade: '', valor: '' }
     ]);
 
     const valorInputItemPedido = (e, index) => {
@@ -78,7 +76,7 @@ export const CadastrarPedido = (req) => {
     }
 
     const adicionarItemPedido = () => {
-        setListaItemPedido([...listaItemPedido, { ServicoId: '2', quantidade: '2', valor: '2' }]);
+        setListaItemPedido([...listaItemPedido, { ServicoId: '', quantidade: '', valor: '' }]);
     }
 
     const btnRemoverItem = (index) => {
